@@ -12,10 +12,12 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boot.entity.Common;
+import com.boot.local.RootPathThreadLocal;
 import com.boot.util.FloderUtil;
 import com.boot.util.MyWorkbookFactory;
 
@@ -29,16 +31,29 @@ public class PoiController {
 
 	@GetMapping(value = "/hello")
 	public String say() {
-		return "rootpath value =" +rootpath.replaceAll(":", "")+ Common.PREFIXPATH ;
+		
+		return "RootPathThreadLocal value ="+RootPathThreadLocal.getString()
+				+ "  ; rootpath value =" +rootpath.replaceAll(":", "")+ Common.PREFIXPATH ;
+	}
+	
+	@GetMapping(value = "/path")
+	public String setRootPath(@RequestParam("path") String path) {
+		RootPathThreadLocal.set(path);
+		return  "rootpath value =" +RootPathThreadLocal.getString()+ Common.PREFIXPATH ;
+		
 	}
 	
 	
 
+	/**
+	 * 转换excel，行转列特殊转换
+	 * @return
+	 */
 	@GetMapping(value = "/convert")
 	public String doConvertExcel() {
 		
 		Long start = System.currentTimeMillis();
-		List<String> files = FloderUtil.getFilesNames(rootpath); 
+		List<String> files = FloderUtil.getFilesNames(RootPathThreadLocal.getString() , Common.PREFIXPATH); 
 		if(files == null || files.size() < 1){
 			return "指定文件夹中没有文件，请确认!";
 		}else{
