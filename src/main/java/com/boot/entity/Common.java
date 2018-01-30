@@ -17,6 +17,12 @@ public class Common {
 	public static String TELECOMTYPE ="telecom";
 	
 	public static String TXTCON=".txt";
-	
+
+
+	public static final String  PREFIX = "prefix";
+
+	public static final String SUFFIX = "suffix";
+
+	public static final String FILENAME = "fileName" ;
 	
 }

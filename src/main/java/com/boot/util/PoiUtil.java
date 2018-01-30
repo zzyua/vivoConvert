@@ -1,5 +1,6 @@
 package com.boot.util;
 
+import java.io.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,23 +10,55 @@ import java.util.Map;
 
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 import com.boot.entity.DateFormatPoi;
 import com.boot.entity.Sales_volume;
 
 
 public class PoiUtil {
-	
 
-	
+
+	/**
+	 * 执行转化文件的方法
+	 * @param filePath
+	 */
+	public static void covertFiles(String filePath){
+		InputStream ins = null;
+		Workbook wb = null;
+		FileOutputStream fileOut = null;
+
+		if (filePath != null || !"".equals(filePath)) {
+			try {
+				ins = new FileInputStream(new File(filePath));
+				wb = WorkbookFactory.create(ins);
+				Sheet sheetc = wb.getSheet("转换后数据");
+				if(sheetc != null ){
+					return ;
+				}
+				MyWorkbookFactory.createSheet(wb);
+
+				fileOut = new FileOutputStream(filePath);
+				wb.write(fileOut);
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+
+				try {
+					if(ins != null )
+						ins.close();
+					if(wb != null)
+						wb.close();
+					if(fileOut != null)
+						fileOut.close();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 	
 	
 	/**

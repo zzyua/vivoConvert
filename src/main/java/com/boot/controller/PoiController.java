@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import com.boot.util.PoiUtil;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -20,6 +21,8 @@ import com.boot.entity.Common;
 import com.boot.local.RootPathThreadLocal;
 import com.boot.util.FloderUtil;
 import com.boot.util.MyWorkbookFactory;
+
+import static com.boot.local.RootPathThreadLocal.*;
 
 
 @RestController
@@ -51,62 +54,27 @@ public class PoiController {
 	 */
 	@GetMapping(value = "/convert")
 	public String doConvertExcel() {
+		PoiUtil.covertFiles("/Users/shoushinsakai/Desktop/转换后数据.xlsx");
+		return "转换完成";
 		
-		Long start = System.currentTimeMillis();
-		List<String> files = FloderUtil.getFilesNames(RootPathThreadLocal.getString() , Common.PREFIXPATH); 
-		if(files == null || files.size() < 1){
-			return "指定文件夹中没有文件，请确认!";
-		}else{
-			for(String filePath :files ){
-				System.out.println("开始处理："+filePath);
-				 covertFiles(filePath);
-				 System.out.println("处理结束："+filePath);
-			}
-		}
-		Long end = System.currentTimeMillis();
-		return "转换结束!  耗时： " + (end-start) +"毫秒";
+//		Long start = System.currentTimeMillis();
+//		List<String> files = FloderUtil.getFilesNames(RootPathThreadLocal.getString() , Common.PREFIXPATH);
+//		if(files == null || files.size() < 1){
+//			return "指定文件夹中没有文件，请确认!";
+//		}else{
+//			for(String filePath :files ){
+//				System.out.println("开始处理："+filePath);
+//				 covertFiles(filePath);
+//				 System.out.println("处理结束："+filePath);
+//			}
+//		}
+//
+//
+//		Long end = System.currentTimeMillis();
+//		return "转换结束!  耗时： " + (end-start) +"毫秒";
 	}
 	
 	
-	/**
-	 * 执行转化文件的方法
-	 * @param filePath
-	 */
-	public void covertFiles(String filePath){
-		InputStream ins = null;
-		Workbook wb = null;
-		FileOutputStream fileOut = null;
 
-		if (filePath != null || !"".equals(filePath)) {
-			try {
-				ins = new FileInputStream(new File(filePath));
-				wb = WorkbookFactory.create(ins);
-				Sheet sheetc = wb.getSheet("转换后数据");
-				if(sheetc != null ){
-					return ;
-				}
-				MyWorkbookFactory.createSheet(wb);
-
-				fileOut = new FileOutputStream(filePath);
-				wb.write(fileOut);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-
-				try {
-					if(ins != null )
-						ins.close();
-					if(wb != null)
-						wb.close();
-					if(fileOut != null)
-						fileOut.close();
-					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 
 }
