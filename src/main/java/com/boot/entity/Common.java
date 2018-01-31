@@ -24,5 +24,14 @@ public class Common {
 	public static final String SUFFIX = "suffix";
 
 	public static final String FILENAME = "fileName" ;
+
+
+	public static final  String   SMARTMACHIN = "智能机";
+
+	public static final  String SERIALNUMBER ="序号" ;
+
+	public static final  String BRAND = "品牌" ;
+
+	public static final String  MODEL = "型号";
 	
 }

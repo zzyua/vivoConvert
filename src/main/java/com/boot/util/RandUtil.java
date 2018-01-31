@@ -1,5 +1,6 @@
 package com.boot.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -12,7 +13,9 @@ public class RandUtil {
      * @return
      */
     public  static  String getSecondTimestamp(){
-        return  new Date().getTime()+"";
+//        System.out.println(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date().getTime()));
+//        return  new Date().getTime()+"";
+        return new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date().getTime());
     }
 
 
@@ -29,11 +32,13 @@ public class RandUtil {
      * @return
      */
     public static  String getFilePath(){
-        return getSecondTimestamp() + getTenRandom();
+//        return getSecondTimestamp() + getTenRandom();
+        return getSecondTimestamp();
     }
 
     public static void main(String[] args){
-        System.out.println(getSecondTimestamp() + getTenRandom());
+//        System.out.println(getSecondTimestamp() + getTenRandom());
 //        System.out.println(getTenRandom());
+        getSecondTimestamp();
     }
 }

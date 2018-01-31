@@ -54,24 +54,23 @@ public class PoiController {
 	 */
 	@GetMapping(value = "/convert")
 	public String doConvertExcel() {
-		PoiUtil.covertFiles("/Users/shoushinsakai/Desktop/转换后数据.xlsx");
-		return "转换完成";
+
 		
-//		Long start = System.currentTimeMillis();
-//		List<String> files = FloderUtil.getFilesNames(RootPathThreadLocal.getString() , Common.PREFIXPATH);
-//		if(files == null || files.size() < 1){
-//			return "指定文件夹中没有文件，请确认!";
-//		}else{
-//			for(String filePath :files ){
-//				System.out.println("开始处理："+filePath);
-//				 covertFiles(filePath);
-//				 System.out.println("处理结束："+filePath);
-//			}
-//		}
-//
-//
-//		Long end = System.currentTimeMillis();
-//		return "转换结束!  耗时： " + (end-start) +"毫秒";
+		Long start = System.currentTimeMillis();
+		List<String> files = FloderUtil.getFilesNames(RootPathThreadLocal.getString() , Common.PREFIXPATH);
+		if(files == null || files.size() < 1){
+			return "指定文件夹中没有文件，请确认!";
+		}else{
+			for(String filePath :files ){
+				System.out.println("开始处理："+filePath);
+				PoiUtil.covertFiles(filePath);
+				 System.out.println("处理结束："+filePath);
+			}
+		}
+
+
+		Long end = System.currentTimeMillis();
+		return "转换结束!  耗时： " + (end-start) +"毫秒";
 	}
 	
 	
