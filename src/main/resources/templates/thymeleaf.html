@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>thymeleafDemo页面</title>
+</head>
+<body>
+
+
+<h2>这是thymeleafDemo页面</h2>
+<hr/>
+<p > name: <span th:text ="${name}"> </span></p>
+<p > entityName1: <span th:text ="${entity.getName()}"> </span></p>
+<p > entityName2: <span th:text ="${entity.name}"> </span></p>
+
+<p>
+    <input type="text" th:field="*{datePlanted}"  />
+</p>
+<p>
+    <input type="text" id="datePlanted" name="datePlanted" th:value="*{datePlanted}" />
+</p>
+
+
+
+</body>
+</html>

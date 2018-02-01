@@ -1,0 +1,21 @@
+
+
+#VIVO转换文件路径
+rootpath: D
+
+#上传文件到服务器的目录位置
+#uploadFilePath: /Users/shoushinsakai/Desktop/uploadTest/
+uploadFilePath: /usr/local/webService/vivofiles
+
+spring:
+  http:
+    multipart:
+      max-file-size: 100Mb
+      max-request-size: 100Mb
+  thymeleaf:
+#    cache: false
+    encoding: UTF-8
+
+server:
+  port: 8091
+
