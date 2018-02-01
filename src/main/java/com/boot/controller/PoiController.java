@@ -1,28 +1,16 @@
 package com.boot.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import com.boot.util.PoiUtil;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boot.entity.Common;
 import com.boot.local.RootPathThreadLocal;
 import com.boot.util.FloderUtil;
-import com.boot.util.MyWorkbookFactory;
-
-import static com.boot.local.RootPathThreadLocal.*;
 
 
 @RestController
@@ -30,11 +18,16 @@ public class PoiController {
 	
 	@Value("${rootpath}")
 	private String rootpath;
-	
+
 
 	@GetMapping(value = "/hello")
 	public String say() {
-		
+
+//		if(1==1){
+////			throw  new RestDymaicException(ResultEnum.TEST_ERROR);
+//			int i = 1 / 0 ;
+////			throw  new ResolverDymaicException(ResultEnum.TEST_ERROR);
+//		}
 		return "RootPathThreadLocal value ="+RootPathThreadLocal.getString()
 				+ "  ; rootpath value =" +rootpath.replaceAll(":", "")+ Common.PREFIXPATH ;
 	}

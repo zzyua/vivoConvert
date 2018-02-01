@@ -33,5 +33,6 @@ public class Common {
 	public static final  String BRAND = "品牌" ;
 
 	public static final String  MODEL = "型号";
-	
+
+	public static final String ERROR = "error";
 }

@@ -8,6 +8,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 
+/**
+ * 用来创建Workbook的工厂类
+ */
 public class MyWorkbookFactory {
 
 	/**
