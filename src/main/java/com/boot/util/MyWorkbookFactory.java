@@ -107,9 +107,17 @@ public class MyWorkbookFactory {
 				cell_sheet0 = firstSheet.getRow(i + 1).getCell(modelCellIndex);
 				cell1 = afterSimplifySheetRow.createCell(2);
 				PoiUtil.copyCell(workbook, cell_sheet0, cell1, true); // 复制型号
+                double  sumSlOneRow = 0 ;
 				for (int j = 0; j < effectiveCellCounts - 3; j++) {//3 代表 【序号】、【品牌】、【型号】三列
 					cell_sheet0 = firstSheet.getRow(i + 1).getCell(firstAreaCellIndex + j * 2);
 					cell1 = afterSimplifySheetRow.createCell(3 + j);
+					//合计列 值 需要重新计算
+                    if(j < effectiveCellCounts - 4){
+                        sumSlOneRow += cell_sheet0.getNumericCellValue();
+                    }else if(j == effectiveCellCounts - 4){
+                        cell_sheet0.setCellValue(sumSlOneRow);
+                    }
+
 					if (cell_sheet0 != null) {
 						PoiUtil.copyCell(workbook, cell_sheet0, cell1, true); // 复制地区数量、合计
 					}
