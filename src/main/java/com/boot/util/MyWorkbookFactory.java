@@ -78,12 +78,21 @@ public class MyWorkbookFactory {
 
 		// 2、将数据拷贝到【简化后】Sheet中
 		int firstSheetMaxRownum = firstSheet.getLastRowNum(); // 获取最后一行的下标
+
+        try{
+            //如果最后一行不是 合计的 ， 则不过滤最后一行
+            String lastRowval = firstSheet.getRow(firstSheetMaxRownum).getCell(0).getStringCellValue();
+        }catch (IllegalStateException e ){
+            firstSheetMaxRownum = firstSheetMaxRownum+1 ;
+        }
+
+
 		int cellindex = 1 ;
 
 		
 		for (int i = 1; i < firstSheetMaxRownum - 1; i++) {
 
-			String smartVal = firstSheet.getRow(i + 1).getCell(SmartMachineIndex).getStringCellValue();
+			String smartVal = firstSheet.getRow(i + 1).getCell(SmartMachineIndex).getStringCellValue(); //机型值筛选 智能机
 			if(Common.SMARTMACHIN.equals(smartVal)){  //仅筛选出 机型是【智能机】的数据
 				Row afterSimplifySheetRow = afterSimplifySheet.createRow(cellindex);
 				
