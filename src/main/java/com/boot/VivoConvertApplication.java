@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+/**
+ * 这是Master主干版本代码
+ */
 @SpringBootApplication
 public class VivoConvertApplication
 //extends SpringBootServletInitializer
