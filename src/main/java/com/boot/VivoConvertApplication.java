@@ -5,6 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+/**
+ * 该版本提供了批量转换统计数据功能。
+ * @since  v1版本
+ */
 @SpringBootApplication
 public class VivoConvertApplication
 //extends SpringBootServletInitializer
