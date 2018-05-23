@@ -28,6 +28,7 @@ public class PoiController {
 //			int i = 1 / 0 ;
 ////			throw  new ResolverDymaicException(ResultEnum.TEST_ERROR);
 //		}
+		System.out.println("hello");
 		return "RootPathThreadLocal value ="+RootPathThreadLocal.getString()
 				+ "  ; rootpath value =" +rootpath.replaceAll(":", "")+ Common.PREFIXPATH ;
 	}
