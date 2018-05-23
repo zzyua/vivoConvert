@@ -23,12 +23,6 @@ public class PoiController {
 	@GetMapping(value = "/hello")
 	public String say() {
 
-//		if(1==1){
-////			throw  new RestDymaicException(ResultEnum.TEST_ERROR);
-//			int i = 1 / 0 ;
-////			throw  new ResolverDymaicException(ResultEnum.TEST_ERROR);
-//		}
-		System.out.println("hellsoq");
 		return "RootPathThreadLocal value ="+RootPathThreadLocal.getString()
 				+ "  ; rootpath value =" +rootpath.replaceAll(":", "")+ Common.PREFIXPATH ;
 	}
