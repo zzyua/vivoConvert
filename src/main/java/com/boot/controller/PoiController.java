@@ -22,6 +22,7 @@ public class PoiController {
 
 	@GetMapping(value = "/hello")
 	public String say() {
+		System.out.println("hello");
 		return "RootPathThreadLocal value ="+RootPathThreadLocal.getString()
 				+ "  ; rootpath value =" +rootpath.replaceAll(":", "")+ Common.PREFIXPATH ;
 	}
