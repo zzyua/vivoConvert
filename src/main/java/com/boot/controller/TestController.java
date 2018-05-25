@@ -43,7 +43,7 @@ public class TestController {
 
     @GetMapping("/hello_err.page")
     public String helloPageError(){
-        if (1==1)
+        if (2==2)
             throw new RestDymaicException(ResultEnum.TEST_ERROR) ;
         return "test";
     }
