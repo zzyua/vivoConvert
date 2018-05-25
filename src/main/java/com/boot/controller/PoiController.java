@@ -2,7 +2,10 @@ package com.boot.controller;
 
 import java.util.List;
 
+import com.boot.exception.RestDymaicException;
+import com.boot.exception.ResultEnum;
 import com.boot.util.PoiUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,17 +17,14 @@ import com.boot.util.FloderUtil;
 
 
 @RestController
+@Slf4j
 public class PoiController {
 	
 	@Value("${rootpath}")
 	private String rootpath;
 
 
-	@GetMapping(value = "/hello")
-	public String say() {
-		return "RootPathThreadLocal value ="+RootPathThreadLocal.getString()
-				+ "  ; rootpath value =" +rootpath.replaceAll(":", "")+ Common.PREFIXPATH ;
-	}
+
 	
 	@GetMapping(value = "/path")
 	public String setRootPath(@RequestParam("path") String path) {

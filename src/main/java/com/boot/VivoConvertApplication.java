@@ -1,14 +1,22 @@
 package com.boot;
 
+import com.boot.util.SpringUtil;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * 这是Master主干版本代码
  */
 @SpringBootApplication
+@EnableTransactionManagement
+//@MapperScan()
+//@MapperScan("microservice.qssj.mapper")
+
 public class VivoConvertApplication
 //extends SpringBootServletInitializer
 {
@@ -21,7 +29,8 @@ public class VivoConvertApplication
 //	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(VivoConvertApplication.class, args);
+		ConfigurableApplicationContext app = SpringApplication.run(VivoConvertApplication.class, args);
+		SpringUtil.setApplicationContext(app);
 	}
 	
 	

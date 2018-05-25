@@ -1,5 +1,8 @@
 package com.boot.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * 用于处理异常处理的工具类
@@ -24,7 +27,10 @@ public class ResultUtil {
         result.setCode(code);
         result.setMsg(msg);
         return result;
+    }
 
+    public static Result  error(RestDymaicException exception){
+        return  error(exception.getCode() , exception.getMessage());
     }
 
     public static Result error(ResultEnum resultEnum){
@@ -33,5 +39,11 @@ public class ResultUtil {
         result.setMsg(resultEnum.getMessage());
         return result;
     }
+
+
+
+
+
+
 
 }

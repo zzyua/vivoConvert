@@ -5,6 +5,9 @@ import org.springframework.context.annotation.Bean;
 
 import javax.servlet.MultipartConfigElement;
 
+/**
+ * 暂时废弃配置累
+ */
 public class FileUploadConfiguration {
 
 //    @Bean

@@ -1,5 +1,8 @@
 package com.boot.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Result<T> {
 
     /**
@@ -39,5 +42,13 @@ public class Result<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public Map<String, Object> toMap(){
+        Map map = new HashMap() ;
+        map.put("code" , code) ;
+        map.put("msg" , msg) ;
+        map.put("data" , data) ;
+        return map;
     }
 }

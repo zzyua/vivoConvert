@@ -7,7 +7,8 @@ package com.boot.exception;
 public enum  ResultEnum {
 
     TEST_ERROR(-111,"测试异常"),
-    UNKNOW_ERROR(-1,"未知错误")
+    UNKNOW_ERROR(-1,"未知错误"),
+    REQUESTURLVAILD(-2, "请求url异常，请检查")
 
 
     ;

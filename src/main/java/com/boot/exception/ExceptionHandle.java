@@ -8,16 +8,24 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 自定义异常 处理类
  * @author  zhangzy
  */
-@ControllerAdvice
+//@ControllerAdvice
 //@RestControllerAdvice
 public class ExceptionHandle {
 
     private  static  final Logger logger = LoggerFactory.getLogger(ExceptionHandle.class);
+
+//    @ExceptionHandler()
+    public ModelAndView ss(HttpServletRequest request){
+        return null ;
+    }
 
 
     /**
