@@ -1,11 +1,9 @@
 package com.boot.controller;
 
-import com.boot.entity.Common;
 import com.boot.exception.RestDymaicException;
 import com.boot.exception.Result;
 import com.boot.exception.ResultEnum;
 import com.boot.exception.ResultUtil;
-import com.boot.local.RootPathThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

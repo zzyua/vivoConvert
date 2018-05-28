@@ -2,8 +2,6 @@ package com.boot.controller;
 
 import java.util.List;
 
-import com.boot.exception.RestDymaicException;
-import com.boot.exception.ResultEnum;
 import com.boot.util.PoiUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boot.entity.Common;
-import com.boot.local.RootPathThreadLocal;
+import com.boot.common.RootPathThreadLocal;
 import com.boot.util.FloderUtil;
 
 

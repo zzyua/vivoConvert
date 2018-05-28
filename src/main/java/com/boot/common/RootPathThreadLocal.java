@@ -1,4 +1,4 @@
-package com.boot.local;
+package com.boot.common;
 
 import com.boot.util.StrUtil;
 
