@@ -14,8 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @SpringBootApplication
 @EnableTransactionManagement
-//@MapperScan()
-//@MapperScan("microservice.qssj.mapper")
+@MapperScan("com.boot.dao")
 
 public class VivoConvertApplication
 //extends SpringBootServletInitializer

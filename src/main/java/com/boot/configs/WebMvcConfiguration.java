@@ -32,11 +32,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Autowired
     private RestTemplateBuilder builder;
 
-    @Bean
-    public DataSource dataSource() {
-        return DruidDataSourceBuilder.create().build();
-    }
-
 
 
     @Bean
