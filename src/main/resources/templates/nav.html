@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+<meta charset="UTF-8"/>
+<title>Insert title here</title>
+</head>
+<body>
+	<nav class="sidebar responsive ace-save-state" role="navigation" th:fragment="navigation">
+
+        <ul class="nav nav-list">
+            <li class="" pagekey="index">
+                <a  href="#">
+                    <!--th:href="@{/hello.page}"-->
+                    <i class="menu-icon fa fa-tachometer"></i>
+                    <span class="menu-text"> 主页1 </span>
+                </a>
+
+                <b class="arrow"></b>
+            </li>
+
+            <li class="">
+                <!--class="active open"-->
+                <a href="#" class="dropdown-toggle">
+                    <i class="menu-icon fa fa-desktop"></i>
+                    <span class="menu-text">
+								菜单一
+							</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+
+                <b class="arrow"></b>
+
+                <ul class="submenu">
+                    <li  class="" pagekey="hello">
+                        <!--class="active "-->
+                        <a th:href="@{/hello.page}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            紫菜蛋
+                        </a>
+                    </li>
+                    <li  class="" pagekey="dept">
+                        <a th:href="@{/sys/dept/dept.page}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            部门管理
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+    </nav>
+</body>
+
+</html>
+
+
+
+

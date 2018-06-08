@@ -8,8 +8,11 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 
 @Configuration
 @Slf4j
@@ -23,11 +26,19 @@ public class DataSourceConfiguration {
     }
 
     @Bean(name = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactoryBean() {
-        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-        bean.setDataSource(dataSource());
+    public SqlSessionFactory sqlSessionFactoryBean()  throws IOException{
+        SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
+        sqlSessionFactory.setDataSource(dataSource());
+
+//        Resource[] resources = new PathMatchingResourcePatternResolver()
+//                .getResources("classpath*:com/example/demo3/mapper/*Mapper.xml");
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
-            return bean.getObject();
+        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:com/boot/dao/mapper/*.xml"));
+        sqlSessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis-config.xml"));
+//        sqlSessionFactory.setMapperLocations(resources);
+
+            return sqlSessionFactory.getObject();
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException(e);

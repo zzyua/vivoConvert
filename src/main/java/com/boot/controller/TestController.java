@@ -1,16 +1,26 @@
 package com.boot.controller;
 
+import com.boot.dao.SysAclModuleMapper;
 import com.boot.exception.RestDymaicException;
 import com.boot.exception.Result;
 import com.boot.exception.ResultEnum;
 import com.boot.exception.ResultUtil;
+import com.boot.model.SysAclModule;
+import com.boot.security.param.TestVo;
+import com.boot.util.BeanValidator;
+import com.boot.util.JsonMapper;
+import com.boot.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import java.util.Map;
 
 /**
  * 测试controller
@@ -18,6 +28,31 @@ import javax.sql.DataSource;
 @Controller
 @Slf4j
 public class TestController {
+
+    @RequestMapping("/hello.page")
+    public  String helloPage( Model model){
+        model.addAttribute("pagekey" , "hello") ;
+        return "vivo/hello_test" ;
+
+    }
+
+    @RequestMapping("/validate.json")
+    @ResponseBody
+    public Result validate(TestVo vo) throws Exception {
+        log.info("validate");
+        //1、
+        BeanValidator.check(vo);
+//        Map map = BeanValidator.validate(vo) ;
+//        map.forEach((k,v)->{
+//            log.info("{}->{}",k,v);
+//        });
+
+//        SysAclModuleMapper moduleMapper = SpringUtil.popBean(SysAclModuleMapper.class);
+//        SysAclModule module = moduleMapper.selectByPrimaryKey(1);
+//        log.info(JsonMapper.obj2String(module));
+//        BeanValidator.check(vo);
+        return ResultUtil.success("test validate") ;
+    }
 
 
     @GetMapping(value = "/hello_success.json")
@@ -50,12 +85,6 @@ public class TestController {
         return "test";
     }
 
-    @GetMapping("/hello_err")
-    public String helloPageError2(){
-        if (2==2)
-            throw new RestDymaicException(ResultEnum.TEST_ERROR) ;
-        return "test";
-    }
 
 
 }

@@ -26,6 +26,13 @@ public class SpringUtil {
 //        }
     }
 
+    public static <T> T popBean(Class<T> clazz) {
+        if (applicationContext == null) {
+            return null;
+        }
+        return applicationContext.getBean(clazz);
+    }
+
     //获取applicationContext
     public static ApplicationContext getApplicationContext() {
         return applicationContext;

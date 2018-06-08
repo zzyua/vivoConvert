@@ -16,6 +16,11 @@ public class RestDymaicException extends  RuntimeException{
         this.code = resultEnum.getCode();
     }
 
+    public RestDymaicException(String errMsg){
+        super(errMsg);
+        this.code = -2 ;
+    }
+
     public Integer getCode() {
         return code;
     }
