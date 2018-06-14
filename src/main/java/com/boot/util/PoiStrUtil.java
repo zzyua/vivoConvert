@@ -21,7 +21,7 @@ public class PoiStrUtil {
 	 * @return
 	 */
 	public static String getFilterVal(String parStr){
-		//TODO 这里需要测试过滤其他条件
+
 		if( "屏幕尺寸".equals(parStr) || "采购性质".equals(parStr) || "供货商".equals(parStr) || "智能机".equals(parStr)
 			 || "颜色".equals(parStr) ||  "来源".equals(parStr) || "制式".equals(parStr)
 			 || "一级类目".equals(parStr) || "二级类目".equals(parStr) || "三级类目".equals(parStr)

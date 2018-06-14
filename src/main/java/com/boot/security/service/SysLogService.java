@@ -1,6 +1,7 @@
-package com.boot.service;
+package com.boot.security.service;
 
-import com.boot.dao.*;
+
+import com.boot.security.dao.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

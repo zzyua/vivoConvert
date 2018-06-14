@@ -29,12 +29,6 @@ public class BeanValidator {
                 ConstraintViolation violation = (ConstraintViolation)item ;
                 errors.put(violation.getPropertyPath().toString() , violation.getMessage()) ;
             });
-//
-//            Iterator iterator = validateResult.iterator();
-//            while (iterator.hasNext()) {
-//                ConstraintViolation violation = (ConstraintViolation)iterator.next();
-//                errors.put(violation.getPropertyPath().toString(), violation.getMessage());
-//            }
             return errors;
         }
     }

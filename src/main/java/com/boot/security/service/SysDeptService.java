@@ -1,11 +1,11 @@
-package com.boot.service;
+package com.boot.security.service;
 
 import com.boot.common.RequestHolder;
-import com.boot.dao.SysDeptMapper;
-import com.boot.dao.SysUserMapper;
 import com.boot.exception.RestDymaicException;
 import com.boot.exception.ResultEnum;
 import com.boot.model.SysDept;
+import com.boot.security.dao.SysDeptMapper;
+import com.boot.security.dao.SysUserMapper;
 import com.boot.security.param.DeptParam;
 import com.boot.util.BeanValidator;
 import com.boot.util.IpUtil;
@@ -44,12 +44,12 @@ public class SysDeptService {
                 .seq(param.getSeq()).remark(param.getRemark()).build();
 
         dept.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()), param.getParentId()));
-        //TODO
-//        dept.setOperator(RequestHolder.getCurrentUser().getUsername());
-//        dept.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
 
-        dept.setOperator("ADMIN_insert");
-        dept.setOperateIp("127.0.0.1");
+        dept.setOperator(RequestHolder.getCurrentUser().getUsername());
+        dept.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+
+//        dept.setOperator("ADMIN_insert");
+//        dept.setOperateIp("127.0.0.1");
         dept.setOperateTime(new Date());
         sysDeptMapper.insertSelective(dept);
 //        sysLogService.saveDeptLog(null, dept);
@@ -82,16 +82,16 @@ public class SysDeptService {
         SysDept after = SysDept.builder().id(param.getId()).name(param.getName()).parentId(param.getParentId())
                 .seq(param.getSeq()).remark(param.getRemark()).build();
         after.setLevel(LevelUtil.calculateLevel(getLevel(param.getParentId()), param.getParentId()));
-        //TODO
-//        after.setOperator(RequestHolder.getCurrentUser().getUsername());
-//        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
 
-        after.setOperator("ADMIN_update");
-        after.setOperateIp("127.0.0.1");
+        after.setOperator(RequestHolder.getCurrentUser().getUsername());
+        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+
+//        after.setOperator("ADMIN_update");
+//        after.setOperateIp("127.0.0.1");
         after.setOperateTime(new Date());
 
         updateWithChild(before, after);
-        //TODO
+
 //        sysLogService.saveDeptLog(before, after);
     }
 
@@ -123,14 +123,12 @@ public class SysDeptService {
         if(dept == null ){
             throw  new RestDymaicException(ResultEnum.NEEDDELETEDEPT_NOTEXITS);
         }
-
         if (sysDeptMapper.countByParentId(dept.getId()) > 0) {
             throw new RestDymaicException(ResultEnum.CHILDDEPTS_EXITS) ;
         }
-        //TODO 判断是否有用户。。。
-//        if(sysUserMapper.countByDeptId(dept.getId()) > 0) {
-//            throw new ParamException("当前部门下面有用户，无法删除");
-//        }
+        if(sysUserMapper.countByDeptId(dept.getId()) > 0) {
+            throw new RestDymaicException(ResultEnum.THISDEPTHAHUSER_EXITS);
+        }
         sysDeptMapper.deleteByPrimaryKey(deptId);
     }
 }

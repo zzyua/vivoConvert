@@ -1,13 +1,12 @@
-package com.boot.service;
+package com.boot.security.service;
 
 import com.boot.common.RequestHolder;
-import com.boot.dao.SysLogMapper;
-import com.boot.dao.SysRoleAclMapper;
 import com.boot.model.SysLogWithBLOBs;
 import com.boot.model.SysRoleAcl;
+import com.boot.security.dao.SysLogMapper;
+import com.boot.security.dao.SysRoleAclMapper;
 import com.boot.util.JsonMapper;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class SysRoleAclService {

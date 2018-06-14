@@ -67,7 +67,7 @@ public class ExceptionHandle {
      * @param e  未正常抛出的异常Exception
      * @return
      */
-    //TODO 这里需要实现 有@ResponseBody注解的controller的方法 和 没有被注解的时候，可以进入到不停的拦截方法
+
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public  static  Result handlere(Exception e ){

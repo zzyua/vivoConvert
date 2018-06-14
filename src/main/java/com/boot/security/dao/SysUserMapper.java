@@ -1,4 +1,4 @@
-package com.boot.dao;
+package com.boot.security.dao;
 
 import com.boot.model.SysUser;
 import org.apache.ibatis.annotations.Param;

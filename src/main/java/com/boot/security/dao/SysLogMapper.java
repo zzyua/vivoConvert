@@ -1,4 +1,4 @@
-package com.boot.dao;
+package com.boot.security.dao;
 
 import com.boot.model.SysLog;
 import com.boot.model.SysLogWithBLOBs;

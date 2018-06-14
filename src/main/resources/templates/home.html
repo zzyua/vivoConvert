@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta charset="utf-8" />
-	<title>Dashboard - Ace Admin</title>
+	<title>首页</title>
 
 	<meta name="description" content="overview &amp; stats" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -66,7 +66,7 @@
 						<!-- <a href="#">Home</a> -->
 						主页
 					</li>
-					<li class="active"  >部门管理</li>
+
 				</ul><!-- /.breadcrumb -->
 
 			</div>
@@ -90,16 +90,8 @@
 						<!-- PAGE CONTENT BEGINS -->
 						<div class="row">
 							<div class="col-sm-4">
-								<div class="table-header">
-									部门列表
-									<div class='pull-left action-buttons'>
-										<a class='red' href='javascript:void(0);' onclick='addNewDept()()'>
-											<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i>
-										</a>
-									</div>
-								</div>
 								<!--部门列表-->
-								<div class="dd" id="nestable"  ></div>
+								<div class="dd" id="nestable" ></div>
 							</div>
 
 							<div class="vspace-16-sm"></div>
@@ -243,7 +235,7 @@
 				<div class="modal-body">
 
 					<form class="form-horizontal" role="form">
-						<input id="sysUserId" type="hidden" value="0" data-optype="" data-deptid=""/>
+						<input id="sysUserId" type="text" value="0" data-optype="" data-deptid=""/>
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-userName">
@@ -554,12 +546,12 @@
                 if(result.code == '0'){
                     deptList = result.data;
                     // console.log( deptList) ;
-                    // var preHtml = "<li class='dd-item' ><div class='dd-handle'><i class='h4'>部门列表</i>" +
-                    //     "<div class='pull-right action-buttons'> " +
-                    //     "<a class='green' href='javascript:void(0);' onclick='addNewDept()'>" +
-                    //     "<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i></a></div></li>" ;
+                    var preHtml = "<li class='dd-item' ><div class='dd-handle'><i class='h4'>部门列表</i>" +
+                        "<div class='pull-right action-buttons'> " +
+                        "<a class='green' href='javascript:void(0);' onclick='addNewDept()'>" +
+                        "<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i></a></div></li>" ;
                     var htmlStr =  recursiveRenderDept(deptList);
-                  //  htmlStr = preHtml + htmlStr ;
+                    htmlStr = preHtml + htmlStr ;
 
                     $("#nestable").html(htmlStr);
 
@@ -573,8 +565,7 @@
                 }
             },
             complete:function () {
-
-                $('.dd').nestable("a") ;
+                $('.dd').nestable() ;
                 initChosen();
                 initNestable();
             }
@@ -585,7 +576,7 @@
     function initNestable() {
         $("#sysUserId").attr("data-deptid",initialDeptId) ;
         $("#nestable").find("div[class='dd-handle']").each(function (i,div) {
-            	if(i == 0 ){
+            	if(i == 1 ){
             	    $(this).addClass("btn-yellow no-hover");
 				}
         })

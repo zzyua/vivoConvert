@@ -6,8 +6,8 @@ function  acvtiveMenu(pageKey) {
 
     console.log('pageKey='+pageKey);
 
-    if("index" == pageKey){
-        $("li[pagekey='"+pagekey+"']").addClass("active") ;
+    if(pageKey == null || "home" == pageKey){
+        $("li[pagekey='home']").addClass("active") ;
     }else {
 
         var $obj = $("li[pagekey='"+pagekey+"']") ;

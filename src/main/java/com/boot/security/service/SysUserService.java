@@ -1,15 +1,16 @@
-package com.boot.service;
+package com.boot.security.service;
 
-import com.boot.dao.SysUserMapper;
+import com.boot.common.RequestHolder;
 import com.boot.exception.RestDymaicException;
 import com.boot.exception.ResultEnum;
 import com.boot.model.SysUser;
+import com.boot.security.dao.SysUserMapper;
 import com.boot.security.param.UserParam;
 import com.boot.util.BeanValidator;
+import com.boot.util.IpUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,17 +31,14 @@ public class SysUserService {
 //            throw new RestDymaicException(ResultEnum.EMAILNUM_EXITS);
 //        }
 //        String password = PasswordUtil.randomPassword();
-        //TODO:
+        //TODO: 密码是否需要加密处理
 //        String encryptedPassword = MD5Util.encrypt(password);
         String encryptedPassword = param.getPassword();
         SysUser user = SysUser.builder().username(param.getUsername()).telephone(param.getTelephone()).mail(param.getMail())
                 .password(encryptedPassword).deptId(param.getDeptId()).status(param.getStatus()).remark(param.getRemark()).build();
-        user.setOperator("admin");
-        user.setOperateIp("127.0.0.1");
 
-        //TODO 待确定
-//        user.setOperator(RequestHolder.getCurrentUser().getUsername());
-//        user.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+        user.setOperator(RequestHolder.getCurrentUser().getUsername());
+        user.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         user.setOperateTime(new Date());
 
         // TODO: sendEmail
@@ -65,12 +63,9 @@ public class SysUserService {
         SysUser after = SysUser.builder().id(param.getId()).username(param.getUsername()).telephone(param.getTelephone()).mail(param.getMail())
                 .password(encryptedPassword).deptId(param.getDeptId()).status(param.getStatus()).remark(param.getRemark()).build();
 
-        after.setOperator("admin");
-        after.setOperateIp("127.0.0.1");
 
-        //TODO 待确定
-//        after.setOperator(RequestHolder.getCurrentUser().getUsername());
-//        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+        after.setOperator(RequestHolder.getCurrentUser().getUsername());
+        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());
         sysUserMapper.updateByPrimaryKeySelective(after);
 //        sysLogService.saveUserLog(before, after);

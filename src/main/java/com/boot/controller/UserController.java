@@ -1,7 +1,7 @@
 package com.boot.controller;
 
 import com.boot.model.SysUser;
-import com.boot.service.SysUserService;
+import com.boot.security.service.SysUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,16 +20,19 @@ public class UserController {
     private SysUserService sysUserService;
 
     @RequestMapping("/logout.page")
-    public String logout(HttpServletRequest request) throws IOException, ServletException {
+    public String logout(HttpServletRequest request,HttpServletResponse response) throws IOException, ServletException {
         request.getSession().invalidate();
         //TODO 权限控制
 //        SecurityUtils.getSubject().logout();
-        return "redirect:login";
+
+        return "redirect:login.page";
+
+//        response.sendRedirect("login.page");
 
 
     }
 
-    @RequestMapping("/login.page")
+    @RequestMapping("/checklogin.page")
     public String login(HttpServletRequest request, HttpServletResponse response , Model model) throws IOException, ServletException {
         String username = request.getParameter("userName");
         String password = request.getParameter("password");
@@ -50,31 +53,29 @@ public class UserController {
         } else if (sysUser.getStatus() != 1) {
             errorMsg = "用户已被冻结，请联系管理员";
         } else {
-            // login success
             request.getSession().setAttribute("user", sysUser);
+
             if (StringUtils.isNotBlank(ret)) {
-//                response.sendRedirect(ret);
+                //跳转到对应到页面
                 return "redirect:"+ret;
             } else {
-                return "redirect:vivo/dept";
-//                response.sendRedirect("/sys/dept/dept.page"); //TODO
+                //跳转到主页
+                return "redirect:/";
             }
         }
 
-//        request.setAttribute("error", errorMsg);
-//        request.setAttribute("username", username);
-//        if (StringUtils.isNotBlank(ret)) {
-//            request.setAttribute("ret", ret);
-//        }
-//        String path = "login.html";
+
 
         model.addAttribute("error" , errorMsg) ;
         model.addAttribute("username" , username) ;
         if (StringUtils.isNotBlank(ret)) {
             model.addAttribute("ret", ret);
         }
-//        request.getRequestDispatcher(path).forward(request, response);
-        return "forward:/login";
+        return "forward:/login.page";
+    }
 
+    @RequestMapping("/login.page")
+    public String  doLoging(){
+        return "login" ;
     }
 }

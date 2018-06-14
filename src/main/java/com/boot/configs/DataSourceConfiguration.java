@@ -34,7 +34,7 @@ public class DataSourceConfiguration {
 //                .getResources("classpath*:com/example/demo3/mapper/*Mapper.xml");
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
-        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:com/boot/dao/mapper/*.xml"));
+        sqlSessionFactory.setMapperLocations(resolver.getResources("classpath:com/boot/security/dao/mapper/*.xml"));
         sqlSessionFactory.setConfigLocation(resolver.getResource("classpath:mybatis-config.xml"));
 //        sqlSessionFactory.setMapperLocations(resources);
 

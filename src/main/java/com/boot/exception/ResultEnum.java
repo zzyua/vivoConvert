@@ -15,6 +15,14 @@ public enum  ResultEnum {
     TELEPOHONENUM_EXITS(6,"电话已被占用"),
     EMAILNUM_EXITS(7,"邮箱已被占用"),
     NEEDUPDATEUSER_NOTEXITS(8,"待更新的用户不存在"),
+    SAMEACLMODULNAME_EXITS(9,"当前权限模块下面存在相同名称的权限点"),
+    ACLMODULNAME_NOTEXITS(10,"待更新的权限点不存在"),
+    EXITSSAMENAMESYSACLMODUAL(11, "同一层级下存在相同名称的权限模块"),
+    ACLMODUL_NOTEXITS(12,"待更新的权限模块不存在"),
+    NEEDTODELETEACLMODUL_NOTEXITS(13,"待删除的权限模块不存在，无法删除"),
+    HASCHILDACLMODUL_EXITS(14,"当前模块下面有子模块，无法删除"),
+    HASUSERACLMODUL_EXITS(15,"当前模块下面有用户，无法删除"),
+    THISDEPTHAHUSER_EXITS(16,"当前部门下面有用户，无法删除"),
 
 
     ;

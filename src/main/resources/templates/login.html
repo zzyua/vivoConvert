@@ -31,12 +31,14 @@
 
 <div class="page-container">
     <h1>登陆</h1>
-    <form th:action="@{/login.page}" method="post">
+    <form th:action="@{/checklogin.page}" method="post">
         <input type="text" name="userName" class="username" placeholder="请输入用户名"/>
         <input type="password" name="password" class="password" placeholder="请输入密码"/>
         <button type="submit">登陆</button>
         <div class="error"><span>+</span></div>
     </form>
+    <!--<span th:text="${error}"></span>-->
+
 
 </div>
 <div align="center"></div>

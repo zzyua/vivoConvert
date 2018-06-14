@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta charset="utf-8" />
-	<title>Dashboard - Ace Admin</title>
+	<title>权限模块</title>
 
 	<meta name="description" content="overview &amp; stats" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -66,7 +66,7 @@
 						<!-- <a href="#">Home</a> -->
 						主页
 					</li>
-					<li class="active"  >部门管理</li>
+					<li class="active"  >模块管理</li>
 				</ul><!-- /.breadcrumb -->
 
 			</div>
@@ -75,13 +75,7 @@
 
 
 				<div class="page-header">
-					<!--<h1>-->
-						<!--Dashboard-->
-						<!--<small>-->
-							<!--<i class="ace-icon fa fa-angle-double-right"></i>-->
-							<!--overview &amp; stats-->
-						<!--</small>-->
-					<!--</h1>-->
+
 				</div>
 				<!-- /.page-header -->
 
@@ -91,15 +85,15 @@
 						<div class="row">
 							<div class="col-sm-4">
 								<div class="table-header">
-									部门列表
+									权限列表
 									<div class='pull-left action-buttons'>
-										<a class='red' href='javascript:void(0);' onclick='addNewDept()()'>
+										<a class='red' href='javascript:void(0);' onclick='addNewAclModal()'>
 											<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i>
 										</a>
 									</div>
 								</div>
-								<!--部门列表-->
-								<div class="dd" id="nestable"  ></div>
+								<!--权限列表-->
+								<div class="dd" id="nestable"  style="display: none"></div>
 							</div>
 
 							<div class="vspace-16-sm"></div>
@@ -107,7 +101,7 @@
 							<div class="col-sm-8">
 
 								<div class="table-header">
-									部门管理员列表
+									权限点列表
 									<div class='pull-left action-buttons'>
 										<a class='red' href='javascript:void(0);' onclick='addNewUser()'>
 											<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i>
@@ -146,14 +140,11 @@
 
 	<div class="footer" th:include="footer :: copyright" ></div>
 
-	<!--<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">-->
-		<!--<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>-->
-	<!--</a>-->
 
 
 
 
-	<!-- 模态框（Modal） 部门 -->
+	<!-- 模态框（Modal） 权限 -->
 	<div class="modal fade" id="operatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -162,7 +153,7 @@
 							aria-hidden="true">×
 					</button>
 					<h4 class="modal-title" id="myModalLabel">
-						部门操作
+						权限操作
 					</h4>
 				</div>
 				<div class="modal-body">
@@ -172,22 +163,20 @@
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-name">
-								部门名称：
+								权限模块名称：
 							</label>
 							<div class="col-sm-10" id="input_1">
-								<input type="text" id="form-field-name" placeholder="请输入部门名称" class="col-xs-10 col-sm-5" />
+								<input type="text" id="form-field-name" placeholder="请输入权限模块名称" class="col-xs-10 col-sm-5" />
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-select-parent">
-								上级部门：
+								上级权限：
 							</label>
 
 							<div class="col-sm-10">
-								<select class="chosen-select  " id="form-field-select-parent" data-placeholder="Choose a State...">
-									<!--<option value="">请选择</option>-->
-								</select>
+								<select class="chosen-select  " id="form-field-select-parent" data-placeholder="Choose a State..."></select>
 							</div>
 						</div>
 
@@ -237,13 +226,13 @@
 							aria-hidden="true">×
 					</button>
 					<h4 class="modal-title" id="myModalLabel_user">
-						用户操作
+						权限点操作
 					</h4>
 				</div>
 				<div class="modal-body">
 
 					<form class="form-horizontal" role="form">
-						<input id="sysUserId" type="hidden" value="0" data-optype="" data-deptid=""/>
+						<input id="sysUserId" type="text" value="0" data-optype="" data-deptid=""/>
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-userName">
@@ -312,24 +301,12 @@
 								<span class="lbl"></span>
 							</div>
 
-							<!--<label>是否启用：-->
-								<!--<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox" />-->
-								<!--<span class="lbl"></span>-->
-							<!--</label>-->
+
 						</div>
 
 
 
-						<!--<div class="form-group">-->
-							<!--<label class="col-sm-2 control-label no-padding-right" for="form-field-select-userDept2">-->
-								<!--对接人员：-->
-							<!--</label>-->
-							<!--<div class="col-sm-10">-->
-								<!--<select class="chosen-select  " id="form-field-select-userDept2" data-placeholder="Choose a State...">-->
-									<!--&lt;!&ndash;<option value="">请选择</option>&ndash;&gt;-->
-								<!--</select>-->
-							<!--</div>-->
-						<!--</div>-->
+
 
 
 					</form>
@@ -394,8 +371,8 @@
     /*<![CDATA[*/
     var pagekey = [[${pagekey}]] ;
 
-    var deptList; // 存储树形部门列表
-    var deptMap = {}; // 存储map格式的部门信息
+    var aclModuleList; // 存储树形部门列表
+    var aclModuleMap = {}; // 存储map格式的部门信息
     var userMap = {}; // 存储map格式的用户信息
 	var optionHtml = "" ;
 	var table  ;
@@ -407,65 +384,64 @@
 		acvtiveMenu(pagekey) ;
         loadDeptTree();
 
-        table = $('#dynamic-table').DataTable({
-            "lengthChange": false,
-            "ordering": false,
-            "searching": false,
-            "deferRender": true,
-            "oLanguage": {
-                "sLengthMenu": "每页显示 _MENU_ 条记录",
-                "sZeroRecords": "抱歉， 没有找到",
-                "sInfoEmpty": "没有数据",
-                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
-                "oPaginate": {
-                    "sFirst": "首页",
-                    "sPrevious": "前一页",
-                    "sNext": "后一页",
-                    "sLast": "尾页"
-                },
-                "sZeroRecords": "没有检索到数据",
-            },
-            "sAjaxSource": "/sys/user/depyuser_page.json?deptId="+initialDeptId,
-            "columns": [
-				{data:"username" },
-				{data:"deptId" },
-				{data:"telephone"  , 'className':'hidden-480'},
-				{data:"mail" },
-				{data:"status" , 'className':'hidden-480' },
-				{data:"id"},
-			],
-            "columnDefs": [ {
-                "targets": 5,
-                "data": 'id',
-                "render": function ( data, type, full, meta ) {
-                    return "<td>" +
-                        "<div class='hidden-sm hidden-xs action-buttons center'>" +
-                        "<a class='green' href='javascript:void(0);' onclick='editUser("+data+")'><i class='ace-icon fa fa-pencil bigger-130'></i></a>"+
-                        // "<a class='red' href='javascript:void(0);' onclick='"+data+"'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>"+
-                        "</div>" +
-                        "</td>" ;
-                }
-            } ,{
-                "targets": 4,
-                "data": 'status',
-                "render": function ( data, type, full, meta ) {
-                    var status = "启用";
-                    if("1" != data){
-                        status="禁用";
-					}
-                    return "<td>" +status+"</td>" ;
-                }
-			},{
-                "targets": 1,
-                "data": 'deptId',
-                "render": function ( data, type, full, meta ) {
-                    // console.log("full",full);
-                   var dept = deptMap[data] ;
-                    userMap[full.id] = full ;
-                    return "<td>" +dept.name+"</td>" ;
-                }
-			}]
-        });
+        // table = $('#dynamic-table').DataTable({
+        //     "lengthChange": false,
+        //     "ordering": false,
+        //     "searching": false,
+        //     "deferRender": true,
+        //     "oLanguage": {
+        //         "sLengthMenu": "每页显示 _MENU_ 条记录",
+        //         "sZeroRecords": "抱歉， 没有找到",
+        //         "sInfoEmpty": "没有数据",
+        //         "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+        //         "oPaginate": {
+        //             "sFirst": "首页",
+        //             "sPrevious": "前一页",
+        //             "sNext": "后一页",
+        //             "sLast": "尾页"
+        //         },
+        //         "sZeroRecords": "没有检索到数据",
+        //     },
+        //     "sAjaxSource": "/sys/user/depyuser_page.json?deptId="+initialDeptId,
+        //     "columns": [
+			// 	{data:"username" },
+			// 	{data:"deptId" },
+			// 	{data:"telephone"  , 'className':'hidden-480'},
+			// 	{data:"mail" },
+			// 	{data:"status" , 'className':'hidden-480' },
+			// 	{data:"id"},
+			// ],
+        //     "columnDefs": [ {
+        //         "targets": 5,
+        //         "data": 'id',
+        //         "render": function ( data, type, full, meta ) {
+        //             return "<td>" +
+        //                 "<div class='hidden-sm hidden-xs action-buttons center'>" +
+        //                 "<a class='green' href='javascript:void(0);' onclick='editUser("+data+")'><i class='ace-icon fa fa-pencil bigger-130'></i></a>"+
+        //                 "</div>" +
+        //                 "</td>" ;
+        //         }
+        //     } ,{
+        //         "targets": 4,
+        //         "data": 'status',
+        //         "render": function ( data, type, full, meta ) {
+        //             var status = "启用";
+        //             if("1" != data){
+        //                 status="禁用";
+			// 		}
+        //             return "<td>" +status+"</td>" ;
+        //         }
+			// },{
+        //         "targets": 1,
+        //         "data": 'deptId',
+        //         "render": function ( data, type, full, meta ) {
+        //             // console.log("full",full);
+        //            var dept = deptMap[data] ;
+        //             userMap[full.id] = full ;
+        //             return "<td>" +dept.name+"</td>" ;
+        //         }
+			// }]
+        // });
     });
 
 
@@ -480,9 +456,9 @@
 
     }
 
-    function addNewDept(){
+    function addNewAclModal(){
 	    console.log('addNew....');
-        restModalDept();
+        restModalAclModal();
 	    $("#operatModal").modal('show');
 	}
 
@@ -505,9 +481,9 @@
     function modalSubmit() {
 		var dept = getDeptParam();
         var optype = $("#deptId").attr("data-optype") ;
-        // console.log("dept::" , JSON.stringify(dept));
+        console.log("dept::" , JSON.stringify(dept));
         $.ajax({
-            url: "/sys/dept/"+optype+".json",
+            url: "/sys/aclModule/"+optype+".json",
 			type:"POST",
 			data:JSON.stringify(dept) ,
             contentType: "application/json; charset=utf-8",
@@ -515,7 +491,6 @@
                 // console.log(result);
                 if(result.code == '0'){
                    location.reload();
-
                 }else {
                     alert(result.msg);
                 }
@@ -548,24 +523,21 @@
     //加载部门树结构json
     function loadDeptTree(){
         $.ajax({
-            url: "/sys/dept/tree.json",
+            url: "/sys/aclModule/tree.json",
             success : function (result) {
 
                 if(result.code == '0'){
-                    deptList = result.data;
-                    // console.log( deptList) ;
-                    // var preHtml = "<li class='dd-item' ><div class='dd-handle'><i class='h4'>部门列表</i>" +
-                    //     "<div class='pull-right action-buttons'> " +
-                    //     "<a class='green' href='javascript:void(0);' onclick='addNewDept()'>" +
-                    //     "<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i></a></div></li>" ;
-                    var htmlStr =  recursiveRenderDept(deptList);
-                  //  htmlStr = preHtml + htmlStr ;
+                    aclModuleList = result.data;
+                    console.log( "aclModuleList=",aclModuleList) ;
 
+                    var htmlStr =  recursiveRenderDept(aclModuleList);
+                    //
+                    //
                     $("#nestable").html(htmlStr);
-
-
+                    //
+                    //
                     $("#form-field-select-parent").html("<option value='0'>请选择</option>"+optionHtml) ;
-                    $("#form-field-select-userDept").html("<option value='0'>请选择</option>"+optionHtml) ;
+                    // $("#form-field-select-userDept").html("<option value='0'>请选择</option>"+optionHtml) ;
                     // $("#form-field-select-userDept2").html("<option value='0'>请选择</option>"+optionHtml) ;
 
                 }else {
@@ -573,8 +545,7 @@
                 }
             },
             complete:function () {
-
-                $('.dd').nestable("a") ;
+                $('.dd').nestable() ;
                 initChosen();
                 initNestable();
             }
@@ -592,23 +563,22 @@
     }
 
     // 递归渲染部门树
-    function recursiveRenderDept(deptList) {
+    function recursiveRenderDept(aclModuleList) {
         var htmlStr = "" ;
-        if(deptList && deptList.length > 0) {
+        if(aclModuleList && aclModuleList.length > 0) {
             htmlStr=htmlStr+"<ol class='dd-list'>";
-            $(deptList).each(function (i, dept) {
-                // <ol class='dd-list'><li class='dd-item' data-id='1'><div class='dd-handle'  >item0</div></li></ol>
-                htmlStr=htmlStr+"<li class='dd-item' data-id='"+dept.id+"'>" +
-                    "<div class='dd-handle'   onclick='loadUserList("+dept.id+",this)'>"+dept.name
+            $(aclModuleList).each(function (i, aclModule) {
+                htmlStr=htmlStr+"<li class='dd-item' data-id='"+aclModule.id+"'>" +
+                    "<div class='dd-handle'   onclick='loadUserList("+aclModule.id+",this)'>"+aclModule.name
                     +"<div class='pull-right action-buttons' >" +
-                    "<a class='blue' href='javascript:void(0)' onclick='editDept("+dept.id+")'><i class='ace-icon fa fa-pencil bigger-130'></i> </a>"+
-                    "<a class='red' href='javascript:void(0)' onclick='delDept("+dept.id+")'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>"
+                    "<a class='blue' href='javascript:void(0)' onclick='editDept("+aclModule.id+")'><i class='ace-icon fa fa-pencil bigger-130'></i> </a>"+
+                    "<a class='red' href='javascript:void(0)' onclick='delDept("+aclModule.id+")'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>"
                     +"</div></div>"
-                deptMap[dept.id] = dept;
+                aclModuleMap[aclModule.id] = aclModule;
                 // deptListOptions.push(dept);
-                optionHtml=optionHtml+"<option value='"+dept.id+"'>"+dept.name+"</option>"
-                if (dept.deptList.length > 0) {
-                    htmlStr=htmlStr+recursiveRenderDept(dept.deptList);
+                optionHtml=optionHtml+"<option value='"+aclModule.id+"'>"+aclModule.name+"</option>"
+                if (aclModule.aclModuleList.length > 0) {
+                    htmlStr=htmlStr+recursiveRenderDept(aclModule.aclModuleList);
                 }
                 htmlStr=htmlStr+"</li>" ;
             })
@@ -650,8 +620,8 @@
     }
 
 
-    //重置 部门 modal
-    function restModalDept() {
+    //重置 权限 modal
+    function restModalAclModal() {
         $("#deptId").val(0) ;
         $("#deptId").attr("data-optype",'save') ;
 
@@ -664,7 +634,7 @@
 
     //拷贝部门属性到modal
     function CopyDeptAttrs(id) {
-        var dept = deptMap[id] ;
+        var dept = aclModuleMap[id] ;
         // console.log("dept::" , dept.parentId);
         $("#deptId").val(dept.id) ;
         $("#deptId").attr("data-optype",'update') ;

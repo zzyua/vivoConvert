@@ -9,9 +9,8 @@
 	<nav class="sidebar responsive ace-save-state" role="navigation" th:fragment="navigation">
 
         <ul class="nav nav-list">
-            <li class="" pagekey="index">
-                <a  href="#">
-                    <!--th:href="@{/hello.page}"-->
+            <li class="" pagekey="home">
+                <a  href="/">
                     <i class="menu-icon fa fa-tachometer"></i>
                     <span class="menu-text"> 主页1 </span>
                 </a>
@@ -32,19 +31,19 @@
                 <b class="arrow"></b>
 
                 <ul class="submenu">
-                    <li  class="" pagekey="hello">
-                        <!--class="active "-->
-                        <a th:href="@{/hello.page}">
-                            <i class="menu-icon fa fa-caret-right"></i>
-                            紫菜蛋
-                        </a>
-                    </li>
                     <li  class="" pagekey="dept">
                         <a th:href="@{/sys/dept/dept.page}">
                             <i class="menu-icon fa fa-caret-right"></i>
                             部门管理
                         </a>
                     </li>
+                    <li  class="" pagekey="acl">
+                        <a th:href="@{/sys/aclModule/acl.page}">
+                            <i class="menu-icon fa fa-caret-right"></i>
+                            权限管理
+                        </a>
+                    </li>
+
                 </ul>
             </li>
         </ul>
