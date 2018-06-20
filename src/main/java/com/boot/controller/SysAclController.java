@@ -9,6 +9,7 @@ import com.boot.security.service.SysAclService;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,23 +30,24 @@ public class SysAclController {
 
     @RequestMapping("/save.json")
     @ResponseBody
-    public Result saveAclModule(AclParam param) throws Exception{
+    public Result saveAclModule(@RequestBody AclParam param) throws Exception{
         sysAclService.save(param);
         return ResultUtil.success();
     }
 
     @RequestMapping("/update.json")
     @ResponseBody
-    public Result updateAclModule(AclParam param) throws Exception{
+    public Result updateAclModule(@RequestBody AclParam param) throws Exception{
         sysAclService.update(param);
         return ResultUtil.success();
     }
 
-//    @RequestMapping("/page.json")
-//    @ResponseBody
-//    public Result list(@RequestParam("aclModuleId") Integer aclModuleId, PageQuery pageQuery) {
-//        return ResultUtil.success(sysAclService.getPageByAclModuleId(aclModuleId, pageQuery));
-//    }
+
+    @RequestMapping("/acl_page.json")
+    @ResponseBody
+    public Result list(@RequestParam("aclModuleId") Integer aclModuleId) {
+        return ResultUtil.success(sysAclService.getAllByAclModulId(aclModuleId));
+    }
 
 //    @RequestMapping("acls.json")
 //    @ResponseBody

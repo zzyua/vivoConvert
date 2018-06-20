@@ -218,4 +218,13 @@
     FROM sys_acl
     WHERE url = #{url} <!-- url is not null and url != '' and  #{url} REGEXP url-->
   </select>
+
+  <select id="getAllByAclModulId" parameterType="map" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" />
+    FROM sys_acl
+    WHERE acl_module_id = #{aclModuleId}
+    ORDER BY seq ASC
+  </select>
+
+
 </mapper>

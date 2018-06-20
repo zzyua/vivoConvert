@@ -103,7 +103,7 @@
 								<div class="table-header">
 									权限点列表
 									<div class='pull-left action-buttons'>
-										<a class='red' href='javascript:void(0);' onclick='addNewUser()'>
+										<a class='red' href='javascript:void(0);' onclick='addOrdinate()'>
 											<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i>
 										</a>
 									</div>
@@ -113,14 +113,12 @@
 										<thead>
 											<tr>
 
-												<th>姓名</th>
-												<th>所属部门</th>
-												<th class="hidden-480">电话</th>
-												<th>
-													<!--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
-													邮箱
-												</th>
+												<th>权限名称</th>
+												<th>所属权限模块</th>
+												<th class="hidden-480">类型</th>
+												<th>URL</th>
 												<th class="hidden-480">状态</th>
+												<th class="hidden-480">顺序</th>
 												<th>操作</th>
 											</tr>
 										</thead>
@@ -236,64 +234,47 @@
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-userName">
-								用户名称：
+								名称：
 							</label>
 							<div class="col-sm-10" id="input_userName">
-								<input type="text" id="form-field-userName" placeholder="请输入用户名称" class="col-xs-10 col-sm-5" />
+								<input type="text" id="form-field-userName" placeholder="请输入名称" class="col-xs-10 col-sm-5" />
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-select-userDept">
-								所属部门：
+								所属权限模块：
 							</label>
 							<div class="col-sm-10">
 								<select class="chosen-select  " id="form-field-select-userDept" data-placeholder="Choose a State...">
-									<!--<option value="">请选择</option>-->
+
 								</select>
 							</div>
 						</div>
 
 						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-telnum">
-								手机号码：
+							<label class="col-sm-2 control-label no-padding-right" for="form-field-select-acltype">
+								类型：
 							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-telnum" maxlength="11" placeholder="请输入电话号码" class="col-xs-10 col-sm-5" />
-							</div>
+							<select class="chosen-select  " id="form-field-select-acltype" data-placeholder="Choose a State...">
+									<option value="1">菜单</option>
+									<option value="2">按钮</option>
+									<option value="3">其他</option>
+							</select>
 						</div>
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-mail">
-								邮箱：
+								URL：
 							</label>
 							<div class="col-sm-10" >
-								<input type="text" id="form-field-mail" placeholder="请输入邮箱" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-password">
-								密码设置：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-password" placeholder="请输入密码" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-userremark">
-								备注：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-userremark" placeholder="请输入备注" class="col-xs-10 col-sm-5" />
+								<input type="text" id="form-field-mail" placeholder="请输入URL" class="col-xs-10 col-sm-5" />
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-sm-2 control-label no-padding-right" for="form-field-status">
-								是否启用：
+								状态：
 							</label>
 							<div class="col-sm-10" >
 								<!--<input type="text" id="form-field-status" placeholder="请输入备注" class="col-xs-10 col-sm-5" />-->
@@ -304,10 +285,23 @@
 
 						</div>
 
+						<div class="form-group">
+							<label class="col-sm-2 control-label no-padding-right" for="form-field-pointseq">
+								顺序：
+							</label>
+							<div class="col-sm-10" >
+								<input type="text" id="form-field-pointseq" placeholder="请输入顺序" class="col-xs-10 col-sm-5" />
+							</div>
+						</div>
 
-
-
-
+						<div class="form-group">
+							<label class="col-sm-2 control-label no-padding-right" for="form-field-userremark">
+								备注：
+							</label>
+							<div class="col-sm-10" >
+								<input type="text" id="form-field-userremark" placeholder="请输入备注" class="col-xs-10 col-sm-5" />
+							</div>
+						</div>
 
 					</form>
 
@@ -318,7 +312,7 @@
 						取消
 					</button>
 					<button id="modalSureSubmit_user" type="button" class="btn btn-sm btn-primary"
-							onclick="modalSubmit_user()" data-optype="">
+							onclick="modalSubmit_Ordinate()" data-optype="">
 						确定
 					</button>
 				</div>
@@ -371,87 +365,105 @@
     /*<![CDATA[*/
     var pagekey = [[${pagekey}]] ;
 
-    var aclModuleList; // 存储树形部门列表
+    // var aclModuleList; // 存储树形部门列表
     var aclModuleMap = {}; // 存储map格式的部门信息
-    var userMap = {}; // 存储map格式的用户信息
+    var aclPointMap = {}; // 存储map格式的用户信息
 	var optionHtml = "" ;
 	var table  ;
 	var initialDeptId = 1 ;
+	var loadTreeUrl = "/sys/aclModule/tree.json" ;
 
     jQuery(function($){
 
         //激活菜单栏
 		acvtiveMenu(pagekey) ;
-        loadDeptTree();
+        loadSubjectTree(loadTreeCallback,loadTreeUrl);
 
-        // table = $('#dynamic-table').DataTable({
-        //     "lengthChange": false,
-        //     "ordering": false,
-        //     "searching": false,
-        //     "deferRender": true,
-        //     "oLanguage": {
-        //         "sLengthMenu": "每页显示 _MENU_ 条记录",
-        //         "sZeroRecords": "抱歉， 没有找到",
-        //         "sInfoEmpty": "没有数据",
-        //         "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
-        //         "oPaginate": {
-        //             "sFirst": "首页",
-        //             "sPrevious": "前一页",
-        //             "sNext": "后一页",
-        //             "sLast": "尾页"
-        //         },
-        //         "sZeroRecords": "没有检索到数据",
-        //     },
-        //     "sAjaxSource": "/sys/user/depyuser_page.json?deptId="+initialDeptId,
-        //     "columns": [
-			// 	{data:"username" },
-			// 	{data:"deptId" },
-			// 	{data:"telephone"  , 'className':'hidden-480'},
-			// 	{data:"mail" },
-			// 	{data:"status" , 'className':'hidden-480' },
-			// 	{data:"id"},
-			// ],
-        //     "columnDefs": [ {
-        //         "targets": 5,
-        //         "data": 'id',
-        //         "render": function ( data, type, full, meta ) {
-        //             return "<td>" +
-        //                 "<div class='hidden-sm hidden-xs action-buttons center'>" +
-        //                 "<a class='green' href='javascript:void(0);' onclick='editUser("+data+")'><i class='ace-icon fa fa-pencil bigger-130'></i></a>"+
-        //                 "</div>" +
-        //                 "</td>" ;
-        //         }
-        //     } ,{
-        //         "targets": 4,
-        //         "data": 'status',
-        //         "render": function ( data, type, full, meta ) {
-        //             var status = "启用";
-        //             if("1" != data){
-        //                 status="禁用";
-			// 		}
-        //             return "<td>" +status+"</td>" ;
-        //         }
-			// },{
-        //         "targets": 1,
-        //         "data": 'deptId',
-        //         "render": function ( data, type, full, meta ) {
-        //             // console.log("full",full);
-        //            var dept = deptMap[data] ;
-        //             userMap[full.id] = full ;
-        //             return "<td>" +dept.name+"</td>" ;
-        //         }
-			// }]
-        // });
+        table = $('#dynamic-table').DataTable({
+            "lengthChange": false,
+            "ordering": false,
+            "searching": false,
+            "deferRender": true,
+            "oLanguage": {
+                "sLengthMenu": "每页显示 _MENU_ 条记录",
+                "sZeroRecords": "抱歉， 没有找到",
+                "sInfoEmpty": "没有数据",
+                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
+                "oPaginate": {
+                    "sFirst": "首页",
+                    "sPrevious": "前一页",
+                    "sNext": "后一页",
+                    "sLast": "尾页"
+                },
+                "sZeroRecords": "没有检索到数据",
+            },
+            "sAjaxSource": "/sys/acl/acl_page.json?aclModuleId="+initialDeptId,
+            "columns": [
+				{data:"name" },
+				{data:"aclModuleId" },
+				{data:"type"  , 'className':'hidden-480'},
+				{data:"url" },
+				{data:"status" , 'className':'hidden-480' },
+				{data:"seq" , 'className':'hidden-480' },
+				{data:"id"},
+			],
+            "columnDefs": [ {
+                "targets": 6,
+                "data": 'id',
+                "render": function ( data, type, full, meta ) {
+                    return "<td>" +
+                        "<div class='hidden-sm hidden-xs action-buttons center'>" +
+                        "<a class='green' href='javascript:void(0);' onclick='editOrdinate("+data+")'><i class='ace-icon fa fa-pencil bigger-130'></i></a>"+
+                        "</div>" +
+                        "</td>" ;
+                }
+            } ,{
+                "targets": 4,
+                "data": 'status',
+                "render": function ( data, type, full, meta ) {
+                    var status = "启用";
+                    if("1" != data){
+                        status="禁用";
+					}
+                    return "<td>" +status+"</td>" ;
+                }
+			},{
+                "targets": 2,
+                "data": 'type',
+                "render": function ( data, type, full, meta ) {
+                    var type = "菜单";
+                    if("1" == data){
+                        type="菜单";
+                    }else if("2" == data){
+                        type="按钮";
+					}else {
+                        type="其他";
+					}
+                    return "<td>" +type+"</td>" ;
+                }
+            },{
+                "targets": 1,
+                "data": 'deptId',
+                "render": function ( data, type, full, meta ) {
+                    // console.log("full",full);
+                   var dept = aclModuleMap[data] ;
+                    aclPointMap[full.id] = full ;
+                    return "<td>" +dept.name+"</td>" ;
+                }
+			}]
+        });
     });
 
 
-    function addNewUser() {
-        restModalUser();
+    //新增右侧列表数据
+    function addOrdinate() {
+        restModalOrdinate();
         $("#operatModal_user").modal('show');
     }
 
-    function editUser(userId) {
-        CopyUserAttrs(userId) ;
+    //修改右侧列表数据
+    function editOrdinate(userId) {
+        CopyOrdinateAttrs(userId) ;
         $("#operatModal_user").modal('show');
 
     }
@@ -498,19 +510,18 @@
         })
     }
 
-    function modalSubmit_user() {
-        var user = getUserParam();
+    function modalSubmit_Ordinate() {
+        var param = getOrdinateParam();
         var optype = $("#sysUserId").attr("data-optype") ;
-        var deptId = $("#sysUserId").attr("data-deptid") ;
+        var pertainId = $("#sysUserId").attr("data-deptid");
         $.ajax({
-            url: "/sys/user/"+optype+".json",
+            url: "/sys/acl/"+optype+".json",
             type:"POST",
-            data:JSON.stringify(user) ,
+            data:JSON.stringify(param) ,
             contentType: "application/json; charset=utf-8",
             success : function (result) {
                 if(result.code == '0'){
-                    // location.reload();
-                    table.ajax.url( "/sys/user/depyuser_page.json?deptId="+deptId ).load();
+                    table.ajax.url( "/sys/acl/acl_page.json?aclModuleId="+pertainId ).load();
                     $("#operatModal_user").modal('hide');
                 }else {
                     alert(result.msg);
@@ -521,49 +532,45 @@
     }
 
     //加载部门树结构json
-    function loadDeptTree(){
+    function loadSubjectTree(callback,url){
         $.ajax({
-            url: "/sys/aclModule/tree.json",
+            url: url,
             success : function (result) {
-
                 if(result.code == '0'){
-                    aclModuleList = result.data;
-                    console.log( "aclModuleList=",aclModuleList) ;
-
-                    var htmlStr =  recursiveRenderDept(aclModuleList);
-                    //
-                    //
-                    $("#nestable").html(htmlStr);
-                    //
-                    //
-                    $("#form-field-select-parent").html("<option value='0'>请选择</option>"+optionHtml) ;
-                    // $("#form-field-select-userDept").html("<option value='0'>请选择</option>"+optionHtml) ;
-                    // $("#form-field-select-userDept2").html("<option value='0'>请选择</option>"+optionHtml) ;
-
+                    console.log("开始调用回掉方法。。");
+                    // aclModuleList =result.data ;
+                    callback(result.data) ;
                 }else {
                     alert(result.msg);
                 }
             },
-            complete:function () {
-                $('.dd').nestable() ;
-                initChosen();
-                initNestable();
-            }
         })
 
     }
-    
-    function initNestable() {
-        $("#sysUserId").attr("data-deptid",initialDeptId) ;
-        $("#nestable").find("div[class='dd-handle']").each(function (i,div) {
-            	if(i == 0 ){
-            	    $(this).addClass("btn-yellow no-hover");
-				}
-        })
+
+
+    /**
+	 *
+	 *请求数回掉函数
+	 */
+    var loadTreeCallback = function(data) {
+        console.log("开始执行回掉方法。。");
+        var htmlStr =  recursiveRenderSubject(data);
+
+        $("#nestable").html(htmlStr);
+        $("#form-field-select-parent").html("<option value='0'>请选择</option>"+optionHtml) ;
+        $("#form-field-select-userDept").html("<option value='0'>请选择</option>"+optionHtml) ;
+        $('.dd').nestable() ;
+        initChosen();
+        initNestable();
+
     }
+
+    
+
 
     // 递归渲染部门树
-    function recursiveRenderDept(aclModuleList) {
+    function recursiveRenderSubject(aclModuleList) {
         var htmlStr = "" ;
         if(aclModuleList && aclModuleList.length > 0) {
             htmlStr=htmlStr+"<ol class='dd-list'>";
@@ -577,8 +584,9 @@
                 aclModuleMap[aclModule.id] = aclModule;
                 // deptListOptions.push(dept);
                 optionHtml=optionHtml+"<option value='"+aclModule.id+"'>"+aclModule.name+"</option>"
+
                 if (aclModule.aclModuleList.length > 0) {
-                    htmlStr=htmlStr+recursiveRenderDept(aclModule.aclModuleList);
+                    htmlStr=htmlStr+recursiveRenderSubject(aclModule.aclModuleList);
                 }
                 htmlStr=htmlStr+"</li>" ;
             })
@@ -590,7 +598,7 @@
     function loadUserList(deptId,obj) {
         console.log("deptId=="+deptId);
         $("#sysUserId").attr("data-deptid",deptId) ;
-        table.ajax.url( "/sys/user/depyuser_page.json?deptId="+deptId ).load();
+        table.ajax.url( "/sys/acl/acl_page.json?aclModuleId="+deptId ).load();
         setNestableClass(obj);
     }
 
@@ -646,87 +654,65 @@
     }
 
     //获取modal 用户参数对象
-    function getUserParam() {
-        var user = new Object() ;
-        user.id = $("#sysUserId").val();
-        user.username =  $("#form-field-userName").val() ;
-        user.telephone =   $("#form-field-telnum").val() ;
-        user.mail =  $("#form-field-mail").val() ;
-        user.password = $("#form-field-password").val()  ;
-        user.deptId = $("#form-field-select-userDept").val()  ;
-        user.remark = $("#form-field-userremark").val()  ;
+    function getOrdinateParam() {
+        var param = new Object() ;
+        param.id = $("#sysUserId").val();
+        param.name =  $("#form-field-userName").val() ;
+        param.url =  $("#form-field-mail").val() ;
+        param.aclModuleId = $("#form-field-select-userDept").val()  ;
+        param.type = $("#form-field-select-acltype").val()  ;
+        param.remark = $("#form-field-userremark").val()  ;
+        param.seq = $("#form-field-pointseq").val()  ;
         if($("#form-field-status").prop("checked")){
-            user.status = 1 ;
+            param.status = 1 ;
         }else {
-            user.status = 0 ;
+            param.status = 0 ;
         }
-        return user ;
+        return param ;
     }
 
-    //重置 用户 modal
-    function restModalUser() {
+
+
+    //重置 右侧 modal到数据
+    function restModalOrdinate() {
         $("#sysUserId").val(0) ;
         $("#sysUserId").attr("data-optype",'save') ;
 
         $("#form-field-userName").val("") ;
-        $("#form-field-telnum").val("") ;
         $("#form-field-mail").val("") ;
-        $("#form-field-password").val("") ;
         $("#form-field-userremark").val("") ;
         $("#form-field-status").prop("checked","checked");
+        $("#userDept").val(0) ;
+        $("#form-field-pointseq").val(1) ;
+        $("#form-field-select-acltype").val(1) ;
         $("#form-field-select-userDept").val(0) ;
         $("#form-field-select-userDept").trigger("chosen:updated");
 
     }
 
-    //拷贝部门属性到modal
-    function CopyUserAttrs(id) {
-        var user = userMap[id];
+    //右侧列表：拷贝属性到modal
+    function CopyOrdinateAttrs(id) {
+        var user = aclPointMap[id];
         $("#sysUserId").val(id) ;
         $("#sysUserId").attr("data-optype",'update') ;
-
-
-
-        $("#form-field-userName").val(user.username) ;
-        $("#form-field-telnum").val(user.telephone) ;
-        $("#form-field-mail").val(user.mail) ;
-        $("#form-field-password").val(user.password) ;
+        $("#form-field-userName").val(user.name) ;
+        $("#form-field-mail").val(user.url) ;
         $("#form-field-userremark").val(user.remark) ;
 		if(user.status == 1 ){
             $("#form-field-status").prop("checked","checked");
 		}else {
             $("#form-field-status").prop("checked",false);
 		}
-        $("#form-field-select-userDept").val(user.deptId ) ;
+        $("#form-field-pointseq").val(user.seq) ;
+        $("#form-field-select-acltype").val(user.type) ;
+        $("#form-field-select-userDept").val(user.aclModuleId ) ;
         $("#form-field-select-userDept").trigger("chosen:updated");
+
     }
 
 
 
-	//初始化chosen 插件
-    function initChosen() {
-        $('.chosen-select').chosen({allow_single_deselect:true});
 
-
-        // console.log($("#input_1").css("width"));
-        $(window)
-            .off('resize.chosen')
-            .on('resize.chosen', function() {
-                $('.chosen-select').each(function() {
-                    var $this = $(this);
-                    // $this.next().css({'width': $this.parent().width()});
-                    $this.next().css({'width': '200px'});
-                })
-            }).trigger('resize.chosen');
-
-        $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-            if(event_name != 'sidebar_collapsed') return;
-            $('.chosen-select').each(function() {
-                var $this = $(this);
-                $this.next().css({'width': $this.parent().width()});
-            })
-        });
-    }
 
     /*]]>*/
 </script>

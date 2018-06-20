@@ -6,8 +6,10 @@ import com.boot.exception.DymaicMvcExceptionResoler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.HttpMessageConverters;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -17,20 +19,60 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Locale;
 
 @Configuration
 /**
  * 配置mvc config
  */
-public class WebMvcConfiguration implements WebMvcConfigurer {
+public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
 
     @Autowired
     private RestTemplateBuilder builder;
+
+    @Bean
+    public LocaleResolver localeResolver() {
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        // 默认语言
+        slr.setDefaultLocale(Locale.SIMPLIFIED_CHINESE);
+        return slr;
+    }
+
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+        // 参数名
+//        lci.setParamName("lang");
+        return lci;
+    }
+
+    @Bean(name = "messageSource")
+    public MessageSource initMessageSource() {
+        ReloadableResourceBundleMessageSource messageSource =
+                new ReloadableResourceBundleMessageSource();
+
+//        log.info(“baseName====>:” + this.basename);
+        messageSource.setBasename("classpath:/messages");
+//        messageSource.setBasenames();
+        messageSource.setDefaultEncoding("UTF-8");
+//        messageSource.setCacheMillis(cacheMillis);
+
+//        String msg = messageSource.getMessage(“login.failure.msg”, null, Locale.CHINA);
+//        log.info(“Msg====>” + msg);
+
+        return messageSource;
+    }
+
+
+
 
 
 
@@ -97,6 +139,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new HttpInterceptor()) ;
+        registry.addInterceptor(localeChangeInterceptor());
 
     }
 

@@ -4,6 +4,7 @@ import com.boot.common.RequestHolder;
 import com.boot.exception.RestDymaicException;
 import com.boot.exception.ResultEnum;
 import com.boot.model.SysAcl;
+import com.boot.model.SysUser;
 import com.boot.security.dao.SysAclMapper;
 import com.boot.security.param.AclParam;
 import com.boot.util.BeanValidator;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class SysAclService {
@@ -64,6 +66,11 @@ public class SysAclService {
     public String generateCode() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         return dateFormat.format(new Date()) + "_" + (int)(Math.random() * 100);
+    }
+
+    public List<SysAcl> getAllByAclModulId(Integer aclModuleId){
+        List<SysAcl> list = sysAclMapper.getAllByAclModulId(aclModuleId);
+        return list ;
     }
 
 //    public PageResult<SysAcl> getPageByAclModuleId(int aclModuleId, PageQuery page) {
