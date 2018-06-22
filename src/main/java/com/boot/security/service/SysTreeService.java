@@ -1,9 +1,12 @@
 package com.boot.security.service;
 
+import com.boot.model.SysAcl;
 import com.boot.model.SysAclModule;
 import com.boot.model.SysDept;
+import com.boot.security.dao.SysAclMapper;
 import com.boot.security.dao.SysAclModuleMapper;
 import com.boot.security.dao.SysDeptMapper;
+import com.boot.security.dto.AclDto;
 import com.boot.security.dto.AclModuleLevelDto;
 import com.boot.security.dto.DeptLevelDto;
 import com.boot.util.LevelUtil;
@@ -17,6 +20,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SysTreeService {
@@ -26,6 +31,12 @@ public class SysTreeService {
 
     @Resource
     private SysAclModuleMapper sysAclModuleMapper;
+
+    @Resource
+    private SysCoreService sysCoreService;
+
+    @Resource
+    private SysAclMapper sysAclMapper;
 
 
     public List<DeptLevelDto> deptTree() {
@@ -127,7 +138,78 @@ public class SysTreeService {
 
     public Comparator<AclModuleLevelDto> aclModuleSeqComparator = (AclModuleLevelDto o1, AclModuleLevelDto o2)->o1.getSeq() - o2.getSeq() ;
 
-//    public Comparator<AclDto> aclSeqComparator  = (AclDto o1, AclDto o2) ->o1.getSeq() - o2.getSeq();
+    public Comparator<AclDto> aclSeqComparator  = (AclDto o1, AclDto o2) ->o1.getSeq() - o2.getSeq();
+
+    public List<AclModuleLevelDto> roleTree(int roleId) {
+        // 1、当前用户已分配的权限点
+        List<SysAcl> userAclList = sysCoreService.getCurrentUserAclList();
+        // 2、当前角色分配的权限点
+        List<SysAcl> roleAclList = sysCoreService.getRoleAclList(roleId);
+        // 3、当前系统所有权限点
+        List<AclDto> aclDtoList = Lists.newArrayList();
+
+        Set<Integer> userAclIdSet = userAclList.stream().map(sysAcl -> sysAcl.getId()).collect(Collectors.toSet());
+        Set<Integer> roleAclIdSet = roleAclList.stream().map(sysAcl -> sysAcl.getId()).collect(Collectors.toSet());
+
+        //获取所有到Acl权限点数据
+        List<SysAcl> allAclList = sysAclMapper.getAll();
+        //取出全部的acl数据
+        allAclList.forEach(acl->{
+            AclDto dto = AclDto.adapt(acl);
+            if (userAclIdSet.contains(acl.getId())) {
+                dto.setHasAcl(true);
+            }
+            if (roleAclIdSet.contains(acl.getId())) {
+                dto.setChecked(true);
+            }
+            aclDtoList.add(dto);
+        });
+
+        return aclListToTree(aclDtoList);
+    }
+
+    /**
+     * 获取AclModule到Tree结构数据
+     * 同时调用绑定方法[bindAclsWithOrder]进行AclModuleTree和subAclList的绑定工作
+     * @param aclDtoList
+     * @return
+     */
+    public List<AclModuleLevelDto> aclListToTree(List<AclDto> aclDtoList) {
+        if (CollectionUtils.isEmpty(aclDtoList)) {
+            return Lists.newArrayList();
+        }
+        List<AclModuleLevelDto> aclModuleLevelList = aclModuleTree();
+
+        //将Acl的List拆分成Map<获取AclModuleId,subAclList>格式数据
+        Multimap<Integer, AclDto> moduleIdAclMap = ArrayListMultimap.create();
+        aclDtoList.forEach(acl->{
+            //过滤无效的acl数据
+            if (acl.getStatus() == 1) {
+                moduleIdAclMap.put(acl.getAclModuleId(), acl);
+            }
+        });
+        bindAclsWithOrder(aclModuleLevelList, moduleIdAclMap);
+        return aclModuleLevelList;
+    }
+
+    /**
+     * 将拆分好的subAclList根据AclModuleId，绑定到对应到AclModuleLevelDto中去
+     * @param aclModuleLevelList
+     * @param moduleIdAclMap
+     */
+    public void bindAclsWithOrder(List<AclModuleLevelDto> aclModuleLevelList, Multimap<Integer, AclDto> moduleIdAclMap) {
+        if (CollectionUtils.isEmpty(aclModuleLevelList)) {
+            return;
+        }
+        aclModuleLevelList.forEach(dto->{
+            List<AclDto> aclDtoList = (List<AclDto>)moduleIdAclMap.get(dto.getId());
+            if (CollectionUtils.isNotEmpty(aclDtoList)) {
+                Collections.sort(aclDtoList, aclSeqComparator);
+                dto.setAclList(aclDtoList);
+            }
+            bindAclsWithOrder(dto.getAclModuleList(), moduleIdAclMap);
+        });
+    }
 
 
 

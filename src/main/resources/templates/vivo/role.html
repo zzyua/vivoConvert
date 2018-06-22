@@ -15,7 +15,9 @@
 	<!-- page specific plugin styles -->
 	<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.min.css}" />
 	<link rel="stylesheet" th:href="@{/assets/css/chosen.min.css}" />
+	<link rel="stylesheet" th:href="@{/assets/css/bootstrap-treeview.min.css}" />
 	<link rel="stylesheet" th:href="@{/assets/css/jquery.gritter.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap-duallistbox.min.css}" />
 
 	<!-- text fonts -->
 	<link rel="stylesheet" th:href="@{/assets/css/fonts.googleapis.com.css}" />
@@ -49,7 +51,7 @@
 <body class="no-skin">
 <!--top 导航栏-->
 <div  class="navbar navbar-default ace-save-state" th:include="navbar :: navebar"></div>
-<input id="gritter-light" checked="" type="checkbox" class="ace ace-switch ace-switch-5"/>
+
 
 <div class="main-container ace-save-state" id="main-container">
 	<script type="text/javascript">
@@ -103,18 +105,63 @@
 							<div class="vspace-16-sm"></div>
 
 							<div class="col-sm-8">
+									<div class="tabbable"  >
+										<ul class="nav nav-tabs" id="myTab">
+											<li class="active">
+												<a data-toggle="tab" href="#role_acl">角色与权限</a>
+											</li>
 
-								<div class="table-header">
-									部门管理员列表
-									<div class='pull-left action-buttons'>
-										<a class='red' href='javascript:void(0);' onclick='addNewUser()'>
-											<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i>
-										</a>
-									</div>
-								</div>
-								<div>
+											<li>
+												<a data-toggle="tab" href="#role_user">角色与用户</a>
+											</li>
 
-								</div>
+
+										</ul>
+
+										<div class="tab-content" style="min-height: 500px">
+											<div id="role_acl" class="tab-pane fade in active">
+												<div class="col-sm-8">
+													<div id="treeview-checkable" class=""></div>
+												</div>
+												<div class="col-sm-4"  >
+													<p>
+														<button type="button" class="btn btn-white btn-default" onclick="checkAll()">全选</button>
+														<button type="button" class="btn btn-white btn-primary" onclick="uncheckAll()">去全选</button>
+													</p>
+													<hr/>
+													<p>
+														<button class="btn btn-success btn-block" onclick="roleAclSave()">保存</button>
+													</p>
+
+												</div>
+
+											</div>
+
+											<div id="role_user" class="tab-pane fade " style="min-height: 500px">
+                                                <p>
+                                                    <select multiple="multiple" size="10" name="duallistbox[]" id="duallist">
+                                                        <option value="option1">Option 1</option>
+                                                        <option value="option2">Option 2</option>
+                                                        <option value="option3" selected="selected">Option 3</option>
+                                                        <option value="option4">Option 4</option>
+                                                        <option value="option5">Option 5</option>
+                                                        <option value="option6" selected="selected">Option 6</option>
+                                                        <option value="option7">Option 7</option>
+                                                        <option value="option8">Option 8</option>
+                                                        <option value="option9">Option 9</option>
+                                                        <option value="option0">Option 10</option>
+                                                    </select>
+                                                </p>
+                                                <hr/>
+                                                <p>
+                                                    <button class="btn btn-success btn-block" onclick="roleUserSave()">保存</button>
+                                                </p>
+
+											</div>
+
+
+										</div>
+								</div><!-- /.col -->
 
 							</div>
 						</div><!-- PAGE CONTENT ENDS -->
@@ -200,6 +247,8 @@
 <script th:src="@{/assets/js/jquery-ui.min.js}"></script>
 <script th:src="@{/assets/js/jquery.ui.touch-punch.min.js}"></script>
 <script th:src="@{/assets/js/jquery.nestable.min.js}"></script>
+<script th:src="@{/assets/js/bootstrap-treeview.min.js}"></script>
+<script th:src="@{/assets/js/jquery.bootstrap-duallistbox.min.js}"></script>
 
 <!-- ace scripts -->
 <script th:src="@{/assets/js/ace-elements.min.js}"></script>
@@ -215,9 +264,33 @@
     /*<![CDATA[*/
     var pagekey = [[${pagekey}]] ;
     var roleMap = {}; // 存储map格式的角色信息
+    var lastRoleId = -1 ;
+	var treeView ;
+	var aclModualData = new Array();
+    var modulePrefix = 'm_';
+    var aclPrefix = 'a_';
 
     var loadRoleListUrl = "/sys/role/list.json" ;
 
+    var treeViewOptons = {
+        data: [],
+        showIcon: false,
+        showCheckbox: true,
+        onNodeChecked: function(event, node) {//选中节点
+            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+            if(selectNodes) { //子节点不为空，则选中所有子节点
+                $('#treeview-checkable').treeview('checkNode', [selectNodes, { silent: true }]);
+            }
+            // $('#checkable-output').prepend('<p>' + node.text + ' was checked</p>');
+        },
+        onNodeUnchecked: function (event, node) {//取消选中节点
+            var selectNodes = getChildNodeIdArr(node); //获取所有子节点
+            if (selectNodes) { //子节点不为空，则取消选中所有子节点
+                $('#treeview-checkable').treeview('uncheckNode', [selectNodes, { silent: true }]);
+            }
+            // $('#checkable-output').prepend('<p>' + node.text + ' was unchecked</p>');
+        }
+    }
 
     jQuery(function($){
 
@@ -227,8 +300,7 @@
 		loadRoleList(loadListCallback , loadRoleListUrl);
 
 
-
-
+		//modal 模态框初始化
         $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
             _title: function(title) {
                 var $title = this.options.title || '&nbsp;'
@@ -248,7 +320,74 @@
             $("#form-field-roleremark").val("");
             roleDilog(e);
         });
+
+
+        //duallistbox 初始化
+        initDuallistbox();
+
     });
+
+    function initDuallistbox(){
+        $('select[name="duallistbox[]"]').bootstrapDualListbox('destroy');
+        var demo1 = $('select[name="duallistbox[]"]').bootstrapDualListbox({infoTextFiltered: '<span class="label label-purple label-lg">Filtered</span>',
+            selectorMinimalHeight:300,
+            infoText:"共选中 {0} 项 "});
+        var container1 = demo1.bootstrapDualListbox('getContainer');
+        container1.find('.btn').addClass('btn-white btn-info btn-bold');
+    }
+
+    function roleUserSave() {
+        console.log('........');
+        // $('select[name="duallistbox[]"]').bootstrapDualListbox('destroy');
+    }
+
+
+    //角色、权限 保存按钮
+    function roleAclSave() {
+        if (lastRoleId == -1) {
+            showMessage("保存角色与权限点的关系", "请现在左侧选择需要操作的角色", false);
+            return;
+        }
+        var aclIds = getCheckAclIds();
+        console.log("aclIds",aclIds);
+    }
+    function getCheckAclIds() {
+        var aclIds = new Array();
+        var nodes = treeView.treeview('getChecked', 0);
+        nodes.forEach(function (node) {
+            if(node.id.startsWith(aclPrefix)) {
+                aclIds.push(node.id.substring(aclPrefix.length));
+            }
+		});
+        return aclIds;
+
+    }
+    function checkAll() {
+        treeView.treeview('checkAll', { silent: $('#chk-check-silent').is(':checked') });
+    }
+    
+    function uncheckAll() {
+        treeView.treeview('uncheckAll', { silent: $('#chk-check-silent').is(':checked') });
+    }
+
+    var getChildNodeIdArr =function(node) {
+        var ts = [];
+        if (node.nodes) {
+            for (x in node.nodes) {
+                ts.push(node.nodes[x].nodeId);
+                if (node.nodes[x].nodes) {
+                    var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);
+                    for (j in getNodeDieDai) {
+                        ts.push(getNodeDieDai[j]);
+                    }
+                }
+            }
+        } else {
+            ts.push(node.nodeId);
+        }
+        return ts;
+    }
+
 
 
 
@@ -332,7 +471,71 @@
     }
 
     function nestTableEvent(roleid,obj) {
+        lastRoleId = roleid ;
         setNestableClass(obj);
+
+        //1、加载treeview数据
+        loadRoleAcl();
+        //TODO 加载selectLBox数据
+    }
+
+    function loadRoleAcl() {
+        if (lastRoleId == -1) {
+            return;
+        }
+        aclModualData = new Array();
+
+        $.ajax({
+            url: "/sys/role/roleTree.json",
+            data : {
+                roleId: lastRoleId
+            },
+            type: 'POST',
+            success : function (result) {
+                if(result.code == '0'){
+                     // console.log("权限treeView数据",result.data);
+                    recursivePrepareTreeData(result.data,aclModualData);
+                    // console.log("解析后的数据：",aclModualData);
+                    initTreeView();
+                }else {
+                    showMessage("加载角色权限数据", result.msg, false);
+                }
+            },
+        })
+
+    }
+    function  initTreeView() {
+        treeViewOptons.data = aclModualData ;
+        treeView = $('#treeview-checkable').treeview(treeViewOptons);
+    }
+
+    //解析RoleAcl Tree 结构数据
+    function recursivePrepareTreeData(aclModuleList,arrayData) {
+        if (aclModuleList && aclModuleList.length > 0) {
+            $(aclModuleList).each(function(i, aclModule) {
+
+                var hasChecked = false;
+
+				var aclModualObj = new aclModualDataObj(aclModule,modulePrefix);
+
+                //1、处理acl节点数据
+                if (aclModule.aclList && aclModule.aclList.length > 0) {
+                    $(aclModule.aclList).each(function(i, acl) {
+						var aclObj = new AclDataObj(acl,aclPrefix);
+                        aclModualObj.nodes.push(aclObj);
+                    });
+                }
+                //2、处理子Modual数据
+                if ((aclModule.aclModuleList && aclModule.aclModuleList.length > 0) ||
+                    (aclModule.aclList && aclModule.aclList.length > 0)) {
+                    recursivePrepareTreeData(aclModule.aclModuleList,aclModualObj.nodes);
+
+                }
+                arrayData.push(aclModualObj)
+
+            });
+        }
+
     }
 
 

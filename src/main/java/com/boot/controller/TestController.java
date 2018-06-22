@@ -65,6 +65,7 @@ public class TestController {
     @RequestMapping("/hello.page")
     public  String helloPage( Model model){
         model.addAttribute("pagekey" , "hello") ;
+        log.info("访问url是hello页面,pagekey:{}",model.containsAttribute("pagekey"));
         return "vivo/hello_test" ;
 
     }

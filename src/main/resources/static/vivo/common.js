@@ -72,3 +72,21 @@ function showMessage(title, msg, isSuccess) {
         class_name: (isSuccess ? 'gritter-success' : 'gritter-warning') + (!$('#gritter-light').get(0).checked ? ' gritter-light' : '')
     });
 }
+
+function aclModualDataObj(aclModule,prefixStr){
+    this.text= aclModule.name;
+    this.id = prefixStr+aclModule.id;
+    var state = new Object() ;
+    state.checked = false;
+    this.state = state ;
+    this.nodes = [] ;
+
+}
+
+function AclDataObj(acl,prefixStr) {
+    this.text= acl.name;
+    this.id = prefixStr+acl.id;
+    var state = new Object() ;
+    state.checked = acl.checked
+    this.state = state ;
+}
