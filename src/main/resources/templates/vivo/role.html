@@ -180,7 +180,7 @@
 
 
 		<form class="form-horizontal" role="form">
-			<input id="sysRoleId" type="text" value="0" data-optype="" data-opName="" />
+			<input id="sysRoleId" type="hidden" value="0" data-optype="" data-opName="" />
 
 			<div class="form-group">
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-rolename">
@@ -374,7 +374,10 @@
         var ts = [];
         if (node.nodes) {
             for (x in node.nodes) {
-                ts.push(node.nodes[x].nodeId);
+                var obj = node.nodes[x] ;
+                if( !obj.state.disabled){
+                    ts.push(obj.nodeId);
+				}
                 if (node.nodes[x].nodes) {
                     var getNodeDieDai = getChildNodeIdArr(node.nodes[x]);
                     for (j in getNodeDieDai) {
@@ -383,7 +386,9 @@
                 }
             }
         } else {
-            ts.push(node.nodeId);
+            if(  !node.state.disabled){
+                ts.push(node.nodeId);
+			}
         }
         return ts;
     }

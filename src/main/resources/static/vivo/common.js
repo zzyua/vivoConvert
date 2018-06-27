@@ -76,9 +76,7 @@ function showMessage(title, msg, isSuccess) {
 function aclModualDataObj(aclModule,prefixStr){
     this.text= aclModule.name;
     this.id = prefixStr+aclModule.id;
-    var state = new Object() ;
-    state.checked = false;
-    this.state = state ;
+    this.color = '#8DB6CD' ;
     this.nodes = [] ;
 
 }
@@ -87,6 +85,7 @@ function AclDataObj(acl,prefixStr) {
     this.text= acl.name;
     this.id = prefixStr+acl.id;
     var state = new Object() ;
-    state.checked = acl.checked
+    state.checked = acl.checked;
+    state.disabled = !acl.hasAcl;
     this.state = state ;
 }

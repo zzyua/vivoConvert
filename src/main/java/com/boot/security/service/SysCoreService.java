@@ -55,7 +55,7 @@ public class SysCoreService {
         // 这里是我自己定义了一个假的超级管理员规则，实际中要根据项目进行修改
         // 可以是配置文件获取，可以指定某个用户，也可以指定某个角色
         SysUser sysUser = RequestHolder.getCurrentUser();
-        if (sysUser.getTelephone().contains("admin")) {
+        if ("admin".equals(sysUser.getRemark())) {
             return true;
         }
         return false;
