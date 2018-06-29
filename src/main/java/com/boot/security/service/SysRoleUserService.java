@@ -1,6 +1,7 @@
 package com.boot.security.service;
 
 import com.boot.common.RequestHolder;
+import com.boot.entity.LogType;
 import com.boot.model.SysLogWithBLOBs;
 import com.boot.model.SysRoleUser;
 import com.boot.model.SysUser;
@@ -34,8 +35,8 @@ public class SysRoleUserService {
     private SysRoleUserMapper sysRoleUserMapper;
     @Resource
     private SysUserMapper sysUserMapper;
-//    @Resource
-//    private SysLogMapper sysLogMapper;
+    @Resource
+    private SysLogMapper sysLogMapper;
 
 
     public List<SysUser> getListByRoleId(int roleId) {
@@ -57,7 +58,7 @@ public class SysRoleUserService {
             }
         }
         updateRoleUsers(roleId, userIdList);
-//        saveRoleUserLog(roleId, originUserIdList, userIdList);
+        saveRoleUserLog(roleId, originUserIdList, userIdList);
     }
 
 
@@ -80,7 +81,7 @@ public class SysRoleUserService {
 
     private void saveRoleUserLog(int roleId, List<Integer> before, List<Integer> after) {
         SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
-//        sysLog.setType(LogType.TYPE_ROLE_USER);
+        sysLog.setType(LogType.TYPE_ROLE_USER);
         sysLog.setTargetId(roleId);
         sysLog.setOldValue(before == null ? "" : JsonMapper.obj2String(before));
         sysLog.setNewValue(after == null ? "" : JsonMapper.obj2String(after));
@@ -88,6 +89,6 @@ public class SysRoleUserService {
         sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         sysLog.setOperateTime(new Date());
         sysLog.setStatus(1);
-//        sysLogMapper.insertSelective(sysLog);
+        sysLogMapper.insertSelective(sysLog);
     }
 }

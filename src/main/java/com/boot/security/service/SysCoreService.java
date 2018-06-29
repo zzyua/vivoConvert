@@ -101,9 +101,7 @@ public class SysCoreService {
 
     public List<SysAcl> getCurrentUserAclListFromCache() {
 
-//        //TODO need to Imp
-//        List<SysAcl> aclList = getCurrentUserAclList();
-//        return aclList;
+
         int userId = RequestHolder.getCurrentUser().getId();
         String cacheValue = sysCacheService.getFromCache(CacheKeyConstants.USER_ACLS, String.valueOf(userId));
         if (StringUtils.isBlank(cacheValue)) {

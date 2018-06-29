@@ -34,20 +34,16 @@ public class RedisServer {
             return;
         }
         ShardedJedis shardedJedis = null;
-        String cacheKey = generateCacheKey(prefix, keys);
+        byte[] cacheKey = generateCacheKey(prefix, keys);
         try {
-
-//            shardedJedis = redisPool.instance();
-//            shardedJedis.setex(cacheKey, timeoutSeconds, toSavedValue);
-
-            connection.setEx(cacheKey.getBytes(), timeoutSeconds, toSavedValue.getBytes());
+            connection.setEx(cacheKey, timeoutSeconds, toSavedValue.getBytes());
         } catch (Exception e) {
             log.error("save cache exception, prefix:{}, keys:{}", prefix.name(), JsonMapper.obj2String(keys), e);
             log.warn("redis 保存数据出现情况，现发起一次重复连接", e);
             if (connection != null)
                 connection.close();
             connection = redisConnectionFactory.getConnection();
-            connection.setEx(cacheKey.getBytes(), timeoutSeconds, toSavedValue.getBytes());
+            connection.setEx(cacheKey, timeoutSeconds, toSavedValue.getBytes());
         } finally {
             if (connection != null)
                 connection.close();
@@ -56,11 +52,11 @@ public class RedisServer {
 
     public String getFromCache(CacheKeyConstants prefix, String... keys) {
         ShardedJedis shardedJedis = null;
-        String cacheKey = generateCacheKey(prefix, keys);
+        byte[] cacheKey = generateCacheKey(prefix, keys);
         RedisConnection connection = redisConnectionFactory.getConnection();
         try {
 //            shardedJedis = redisPool.instance();
-            String value =   new String(connection.get(cacheKey.getBytes()) );
+            String value =   new String(connection.get(cacheKey) );
             return value;
         } catch (Exception e) {
             log.error("get from cache exception, prefix:{}, keys:{}", prefix.name(), JsonMapper.obj2String(keys), e);
@@ -72,11 +68,11 @@ public class RedisServer {
         }
     }
 
-    private String generateCacheKey(CacheKeyConstants prefix, String... keys) {
+    private byte[] generateCacheKey(CacheKeyConstants prefix, String... keys) {
         String key = prefix.name();
         if (keys != null && keys.length > 0) {
             key += "_" + Joiner.on("_").join(keys);
         }
-        return key;
+        return key.getBytes();
     }
 }

@@ -1,6 +1,7 @@
 package com.boot.security.service;
 
 import com.boot.common.RequestHolder;
+import com.boot.entity.LogType;
 import com.boot.model.SysLogWithBLOBs;
 import com.boot.model.SysRoleAcl;
 import com.boot.security.dao.SysLogMapper;
@@ -39,8 +40,7 @@ public class SysRoleAclService {
             }
         }
         updateRoleAcls(roleId, aclIdList);
-        //TODO 日志需要保存
-//        saveRoleAclLog(roleId, originAclIdList, aclIdList);
+        saveRoleAclLog(roleId, originAclIdList, aclIdList);
     }
 
     @Transactional
@@ -62,12 +62,12 @@ public class SysRoleAclService {
 
     private void saveRoleAclLog(int roleId, List<Integer> before, List<Integer> after) {
         SysLogWithBLOBs sysLog = new SysLogWithBLOBs();
-//        sysLog.setType(LogType.TYPE_ROLE_ACL);
+        sysLog.setType(LogType.TYPE_ROLE_ACL);
         sysLog.setTargetId(roleId);
         sysLog.setOldValue(before == null ? "" : JsonMapper.obj2String(before));
         sysLog.setNewValue(after == null ? "" : JsonMapper.obj2String(after));
         sysLog.setOperator(RequestHolder.getCurrentUser().getUsername());
-//        sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
+        sysLog.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         sysLog.setOperateTime(new Date());
         sysLog.setStatus(1);
         sysLogMapper.insertSelective(sysLog);

@@ -43,8 +43,7 @@ public class SysAclModuleService {
         aclModule.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         aclModule.setOperateTime(new Date());
         sysAclModuleMapper.insertSelective(aclModule);
-        //TODO log
-//        sysLogService.saveAclModuleLog(null, aclModule);
+        sysLogService.saveAclModuleLog(null, aclModule);
     }
 
     public void update(AclModuleParam param) throws Exception{
@@ -65,8 +64,7 @@ public class SysAclModuleService {
         after.setOperateTime(new Date());
 
         updateWithChild(before, after);
-        //TODO log
-//        sysLogService.saveAclModuleLog(before, after);
+        sysLogService.saveAclModuleLog(before, after);
     }
 
 
