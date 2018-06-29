@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = JedisProperties.JEDIS_PREFIX)
+//@ConfigurationProperties(prefix = JedisProperties.JEDIS_PREFIX)
 @Getter
 @Setter
 public class JedisProperties {

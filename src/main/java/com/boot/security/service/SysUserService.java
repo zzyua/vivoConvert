@@ -101,4 +101,9 @@ public class SysUserService {
         List<SysUser> list = sysUserMapper.getAllByDeptId(deptId);
         return list;
     }
+
+
+    public List<SysUser> getAll() {
+        return sysUserMapper.getAll();
+    }
 }

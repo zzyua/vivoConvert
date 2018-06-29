@@ -124,10 +124,7 @@
 													<div id="treeview-checkable" class=""></div>
 												</div>
 												<div class="col-sm-4"  >
-													<p>
-														<button type="button" class="btn btn-white btn-default" onclick="checkAll()">全选</button>
-														<button type="button" class="btn btn-white btn-primary" onclick="uncheckAll()">去全选</button>
-													</p>
+
 													<hr/>
 													<p>
 														<button class="btn btn-success btn-block" onclick="roleAclSave()">保存</button>
@@ -139,18 +136,7 @@
 
 											<div id="role_user" class="tab-pane fade " style="min-height: 500px">
                                                 <p>
-                                                    <select multiple="multiple" size="10" name="duallistbox[]" id="duallist">
-                                                        <option value="option1">Option 1</option>
-                                                        <option value="option2">Option 2</option>
-                                                        <option value="option3" selected="selected">Option 3</option>
-                                                        <option value="option4">Option 4</option>
-                                                        <option value="option5">Option 5</option>
-                                                        <option value="option6" selected="selected">Option 6</option>
-                                                        <option value="option7">Option 7</option>
-                                                        <option value="option8">Option 8</option>
-                                                        <option value="option9">Option 9</option>
-                                                        <option value="option0">Option 10</option>
-                                                    </select>
+                                                    <select multiple="multiple" size="10" name="duallistbox[]" id="duallist"></select>
                                                 </p>
                                                 <hr/>
                                                 <p>
@@ -323,7 +309,7 @@
 
 
         //duallistbox 初始化
-        initDuallistbox();
+        // initDuallistbox();
 
     });
 
@@ -337,8 +323,27 @@
     }
 
     function roleUserSave() {
-        console.log('........');
-        // $('select[name="duallistbox[]"]').bootstrapDualListbox('destroy');
+
+        if (lastRoleId == -1) {
+            showMessage("保存角色与用户的关系", "请现在左侧选择需要操作的角色", false);
+            return;
+        }
+
+        $.ajax({
+            url: "/sys/role/changeUsers.json",
+            data: {
+                roleId: lastRoleId,
+                userIds: $("#duallist").val() ? $("#duallist").val().join(",") : ''
+            },
+            type: 'POST',
+            success: function (result) {
+                if (result.code == '0') {
+                    showMessage("保存角色与用户的关系", "操作成功", false);
+                } else {
+                    showMessage("保存角色与用户的关系", result.msg, false);
+                }
+            }
+        });
     }
 
 
@@ -350,25 +355,36 @@
         }
         var aclIds = getCheckAclIds();
         console.log("aclIds",aclIds);
+
+        $.ajax({
+            url: "/sys/role/changeAcls.json",
+            data: {
+                roleId: lastRoleId,
+                aclIds: aclIds
+            },
+            type: 'POST',
+            success: function (result) {
+                if (result.code == '0' ) {
+                    showMessage("保存角色与权限点的关系", "操作成功", false);
+                } else {
+                    showMessage("保存角色与权限点的关系", result.msg, false);
+                }
+            }
+        });
     }
     function getCheckAclIds() {
-        var aclIds = new Array();
+        var aclIds = "";
         var nodes = treeView.treeview('getChecked', 0);
         nodes.forEach(function (node) {
             if(node.id.startsWith(aclPrefix)) {
-                aclIds.push(node.id.substring(aclPrefix.length));
+                // aclIds.push(node.id.substring(aclPrefix.length));
+                aclIds +=   node.id.substring(aclPrefix.length) +"," ;
             }
 		});
         return aclIds;
 
     }
-    function checkAll() {
-        treeView.treeview('checkAll', { silent: $('#chk-check-silent').is(':checked') });
-    }
-    
-    function uncheckAll() {
-        treeView.treeview('uncheckAll', { silent: $('#chk-check-silent').is(':checked') });
-    }
+
 
     var getChildNodeIdArr =function(node) {
         var ts = [];
@@ -481,9 +497,11 @@
 
         //1、加载treeview数据
         loadRoleAcl();
-        //TODO 加载selectLBox数据
+        //2、加载角色用户列表数据
+        loadRoleUser();
     }
 
+    //加载角色权限tree 数据
     function loadRoleAcl() {
         if (lastRoleId == -1) {
             return;
@@ -509,6 +527,40 @@
         })
 
     }
+
+    function loadRoleUser() {
+        if (lastRoleId == -1) {
+            return;
+        }
+
+        $.ajax({
+            url: "/sys/role/users.json",
+            data : {
+                roleId: lastRoleId
+            },
+            type: 'POST',
+            success : function (result) {
+                if(result.code == '0'){
+                   // console.log("角色用户..",result.data);
+                   var list = result.data ;
+                   list.forEach(function (item, index) {
+                       // console.log("item..",item);
+                       if(item.selected){
+						   $("#duallist").append("<option value='"+item.id+"' selected='selected'>"+item.username+"</option>") ;
+					   }else{
+                           $("#duallist").append("<option value='"+item.id+"' >"+item.username+"</option>") ;
+                       }
+				   });
+                   initDuallistbox();
+                }else {
+                    showMessage("加载角色用户数据", result.msg, false);
+                }
+            },
+        })
+
+
+    }
+
     function  initTreeView() {
         treeViewOptons.data = aclModualData ;
         treeView = $('#treeview-checkable').treeview(treeViewOptons);

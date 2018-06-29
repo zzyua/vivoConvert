@@ -5,8 +5,10 @@ import com.boot.model.SysLogWithBLOBs;
 import com.boot.model.SysRoleAcl;
 import com.boot.security.dao.SysLogMapper;
 import com.boot.security.dao.SysRoleAclMapper;
+import com.boot.util.IpUtil;
 import com.boot.util.JsonMapper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class SysRoleAclService {
@@ -26,33 +29,35 @@ public class SysRoleAclService {
 
 
     public void changeRoleAcls(Integer roleId, List<Integer> aclIdList) {
-//        List<Integer> originAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.newArrayList(roleId));
-//        if (originAclIdList.size() == aclIdList.size()) {
-//            Set<Integer> originAclIdSet = Sets.newHashSet(originAclIdList);
-//            Set<Integer> aclIdSet = Sets.newHashSet(aclIdList);
-//            originAclIdSet.removeAll(aclIdSet);
-//            if (CollectionUtils.isEmpty(originAclIdSet)) {
-//                return;
-//            }
-//        }
-//        updateRoleAcls(roleId, aclIdList);
+        List<Integer> originAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.newArrayList(roleId));
+        if (originAclIdList.size() == aclIdList.size()) {
+            Set<Integer> originAclIdSet = Sets.newHashSet(originAclIdList);
+            Set<Integer> aclIdSet = Sets.newHashSet(aclIdList);
+            originAclIdSet.removeAll(aclIdSet);
+            if (CollectionUtils.isEmpty(originAclIdSet)) {
+                return;
+            }
+        }
+        updateRoleAcls(roleId, aclIdList);
+        //TODO 日志需要保存
 //        saveRoleAclLog(roleId, originAclIdList, aclIdList);
     }
 
     @Transactional
     public void updateRoleAcls(int roleId, List<Integer> aclIdList) {
-//        sysRoleAclMapper.deleteByRoleId(roleId);
+        sysRoleAclMapper.deleteByRoleId(roleId);
 
+        //如果新增的权限list为空，则不处理
         if (CollectionUtils.isEmpty(aclIdList)) {
             return;
         }
         List<SysRoleAcl> roleAclList = Lists.newArrayList();
-//        for(Integer aclId : aclIdList) {
-//            SysRoleAcl roleAcl = SysRoleAcl.builder().roleId(roleId).aclId(aclId).operator(RequestHolder.getCurrentUser().getUsername())
-//                    .operateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest())).operateTime(new Date()).build();
-//            roleAclList.add(roleAcl);
-//        }
-//        sysRoleAclMapper.batchInsert(roleAclList);
+        for(Integer aclId : aclIdList) {
+            SysRoleAcl roleAcl = SysRoleAcl.builder().roleId(roleId).aclId(aclId).operator(RequestHolder.getCurrentUser().getUsername())
+                    .operateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest())).operateTime(new Date()).build();
+            roleAclList.add(roleAcl);
+        }
+        sysRoleAclMapper.batchInsert(roleAclList);
     }
 
     private void saveRoleAclLog(int roleId, List<Integer> before, List<Integer> after) {

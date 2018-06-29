@@ -1,5 +1,6 @@
 
-
+server:
+  port: 8091
 #VIVO转换文件路径
 rootpath: D
 
@@ -26,25 +27,22 @@ spring:
       min-idle: 1
       max-active: 20
       max-wait: 60000
-
-
   redis:
-    database: 0
+#    database: 0
     host: 47.98.131.254
     port: 6379
     password: 123456
     timeout: 3000
+    pool:
+      max-idle: 8
+      max-active: 8
+      min-idle: 0
+      max-wait: -1
 
-server:
-  port: 8091
 logging:
   level:
     com.boot.dao.mapper: debug
-#mybatis:
-#  config-location: classpath*:mapper/*.xml
-#  config-location: classpath:mapper/*.xml
-#  mapper-locations: classpath:mapper/*.xml
-#  config-location:
+
 
 
 

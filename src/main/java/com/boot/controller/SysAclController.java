@@ -6,6 +6,7 @@ import com.boot.exception.ResultUtil;
 import com.boot.model.SysRole;
 import com.boot.security.param.AclParam;
 import com.boot.security.service.SysAclService;
+import com.boot.security.service.SysRoleService;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,8 +26,8 @@ public class SysAclController {
 
     @Resource
     private SysAclService sysAclService;
-//    @Resource
-//    private SysRoleService sysRoleService;
+    @Resource
+    private SysRoleService sysRoleService;
 
     @RequestMapping("/save.json")
     @ResponseBody
@@ -49,13 +50,13 @@ public class SysAclController {
         return ResultUtil.success(sysAclService.getAllByAclModulId(aclModuleId));
     }
 
-//    @RequestMapping("acls.json")
-//    @ResponseBody
-//    public Result acls(@RequestParam("aclId") int aclId) {
-//        Map<String, Object> map = Maps.newHashMap();
-//        List<SysRole> roleList = sysRoleService.getRoleListByAclId(aclId);
-//        map.put("roles", roleList);
-//        map.put("users", sysRoleService.getUserListByRoleList(roleList));
-//        return ResultUtil.success(map);
-//    }
+    @RequestMapping("acls.json")
+    @ResponseBody
+    public Result acls(@RequestParam("aclId") int aclId) {
+        Map<String, Object> map = Maps.newHashMap();
+        List<SysRole> roleList = sysRoleService.getRoleListByAclId(aclId);
+        map.put("roles", roleList);
+        map.put("users", sysRoleService.getUserListByRoleList(roleList));
+        return ResultUtil.success(map);
+    }
 }

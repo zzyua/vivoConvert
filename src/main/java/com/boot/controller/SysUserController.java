@@ -4,7 +4,10 @@ import com.boot.exception.Result;
 import com.boot.exception.ResultUtil;
 import com.boot.model.SysUser;
 import com.boot.security.param.UserParam;
+import com.boot.security.service.SysRoleService;
+import com.boot.security.service.SysTreeService;
 import com.boot.security.service.SysUserService;
+import com.google.common.collect.Maps;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/sys/user")
@@ -21,10 +25,10 @@ public class SysUserController {
 
     @Resource
     private SysUserService sysUserService;
-//    @Resource
-//    private SysTreeService sysTreeService;
-//    @Resource
-//    private SysRoleService sysRoleService;
+    @Resource
+    private SysTreeService sysTreeService;
+    @Resource
+    private SysRoleService sysRoleService;
 
     @RequestMapping("/noAuth.page")
     public ModelAndView noAuth() {
@@ -45,13 +49,6 @@ public class SysUserController {
         return ResultUtil.success();
     }
 
-//    @RequestMapping("/page.json")
-//    @ResponseBody
-//    public Result page(@RequestParam("deptId") int deptId, PageQuery pageQuery) {
-//        PageResult<SysUser> result =sysUserService.getPageByDeptId(deptId, pageQuery);
-//        return ResultUtil.success(result);
-//    }
-
 
     @RequestMapping("/depyuser_page.json")
     @ResponseBody
@@ -60,12 +57,13 @@ public class SysUserController {
         return ResultUtil.success(result);
     }
 
-//    @RequestMapping("/acls.json")
-//    @ResponseBody
-//    public JsonData acls(@RequestParam("userId") int userId) {
-//        Map<String, Object> map = Maps.newHashMap();
-//        map.put("acls", sysTreeService.userAclTree(userId));
-//        map.put("roles", sysRoleService.getRoleListByUserId(userId));
-//        return JsonData.success(map);
-//    }
+    //查询用户分配的权限数据
+    @RequestMapping("/acls.json")
+    @ResponseBody
+    public Result acls(@RequestParam("userId") int userId) {
+        Map<String, Object> map = Maps.newHashMap();
+        map.put("acls", sysTreeService.userAclTree(userId));
+        map.put("roles", sysRoleService.getRoleListByUserId(userId));
+        return ResultUtil.success(map);
+    }
 }
