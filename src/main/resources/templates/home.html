@@ -15,6 +15,7 @@
 	<!-- page specific plugin styles -->
 	<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.custom.min.css}" />
 	<link rel="stylesheet" th:href="@{/assets/css/chosen.min.css}" />
+	<link rel="stylesheet" th:href="@{/assets/css/jquery.gritter.min.css}" />
 
 	<!-- text fonts -->
 	<link rel="stylesheet" th:href="@{/assets/css/fonts.googleapis.com.css}" />
@@ -72,65 +73,39 @@
 			</div>
 
 			<div class="page-content">
+				<!--<div class="page-header">-->
 
+				<!--</div>-->
 
-				<div class="page-header">
-					<!--<h1>-->
-						<!--Dashboard-->
-						<!--<small>-->
-							<!--<i class="ace-icon fa fa-angle-double-right"></i>-->
-							<!--overview &amp; stats-->
-						<!--</small>-->
-					<!--</h1>-->
-				</div>
-				<!-- /.page-header -->
+				<div class="widget-box" style="height: 500px">
+					<div class="widget-header">
+						<h4 class="widget-title">文件转换：点击【GO】按钮后，会自动下载转换好的文件</h4>
+					</div>
 
-				<div class="row">
-					<div class="col-xs-12">
-						<!-- PAGE CONTENT BEGINS -->
-						<div class="row">
-							<div class="col-sm-4">
-								<!--部门列表-->
-								<div class="dd" id="nestable" ></div>
-							</div>
-
-							<div class="vspace-16-sm"></div>
-
-							<div class="col-sm-8">
-
-								<div class="table-header">
-									部门管理员列表
-									<div class='pull-left action-buttons'>
-										<a class='red' href='javascript:void(0);' onclick='addNewUser()'>
-											<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i>
-										</a>
+					<div class="widget-body">
+						<div class="widget-main">
+							<!--<form method="POST" enctype="multipart/form-data" action="upload">-->
+							<form   enctype="multipart/form-data"  id="fileForm">
+								<div class="form-group">
+									<div class="col-xs-12">
+										<input multiple="multiple" type="file"   name="file"  id="id-input-file-3" />
 									</div>
-								</div>
-								<div>
-									<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-										<thead>
-											<tr>
+									<!--<p>-->
+										<!--&lt;!&ndash;<input class="btn btn-success btn-block " type="submit" value="GO"/>&ndash;&gt;-->
+										<!--&lt;!&ndash;<input class="btn btn-success btn-block " type="submit" value="GO"/>&ndash;&gt;-->
+										<!--<button class="btn btn-success btn-block " onclick="fileUploadPost">GO</button>-->
+									<!--</p>-->
 
-												<th>姓名</th>
-												<th>所属部门</th>
-												<th class="hidden-480">电话</th>
-												<th>
-													<!--<i class="ace-icon fa fa-clock-o bigger-110 hidden-480"></i>-->
-													邮箱
-												</th>
-												<th class="hidden-480">状态</th>
-												<th>操作</th>
-											</tr>
-										</thead>
-										<tbody id="userList">
-										</tbody>
-									</table>
 								</div>
+							</form>
+							<hr/>
+							<p>
+								<button class="btn btn-success btn-block " onclick="fileUploadPost()">GO</button>
+							</p>
 
-							</div>
-						</div><!-- PAGE CONTENT ENDS -->
-					</div><!-- /.col -->
-				</div><!-- /.row -->
+						</div>
+					</div>
+				</div>
 
 			</div><!-- /.page-content -->
 		</div>
@@ -138,208 +113,6 @@
 
 	<div class="footer" th:include="footer :: copyright" ></div>
 
-	<!--<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">-->
-		<!--<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>-->
-	<!--</a>-->
-
-
-
-
-	<!-- 模态框（Modal） 部门 -->
-	<div class="modal fade" id="operatModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">×
-					</button>
-					<h4 class="modal-title" id="myModalLabel">
-						部门操作
-					</h4>
-				</div>
-				<div class="modal-body">
-
-					<form class="form-horizontal" role="form">
-						<input id="deptId" type="hidden" value="0" data-optype=""/>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-name">
-								部门名称：
-							</label>
-							<div class="col-sm-10" id="input_1">
-								<input type="text" id="form-field-name" placeholder="请输入部门名称" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-select-parent">
-								上级部门：
-							</label>
-
-							<div class="col-sm-10">
-								<select class="chosen-select  " id="form-field-select-parent" data-placeholder="Choose a State...">
-									<!--<option value="">请选择</option>-->
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-seq">
-								显示顺序：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-seq" placeholder="请输入数字" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-remark">
-								备注：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-remark" placeholder="请输入部门备注" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-
-					</form>
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-sm btn-default"  key="modalSureClose"
-							data-dismiss="modal">
-						取消
-					</button>
-					<button id="modalSureSubmit" type="button" class="btn btn-sm btn-primary"  key="modalSureSubmit"
-							onclick="modalSubmit()" data-optype="">
-						确定
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-	<!-- 模态框（Modal） 用户 -->
-	<div class="modal fade" id="operatModal_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_user" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-							aria-hidden="true">×
-					</button>
-					<h4 class="modal-title" id="myModalLabel_user">
-						用户操作
-					</h4>
-				</div>
-				<div class="modal-body">
-
-					<form class="form-horizontal" role="form">
-						<input id="sysUserId" type="text" value="0" data-optype="" data-deptid=""/>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-userName">
-								用户名称：
-							</label>
-							<div class="col-sm-10" id="input_userName">
-								<input type="text" id="form-field-userName" placeholder="请输入用户名称" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-select-userDept">
-								所属部门：
-							</label>
-							<div class="col-sm-10">
-								<select class="chosen-select  " id="form-field-select-userDept" data-placeholder="Choose a State...">
-									<!--<option value="">请选择</option>-->
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-telnum">
-								手机号码：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-telnum" maxlength="11" placeholder="请输入电话号码" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-mail">
-								邮箱：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-mail" placeholder="请输入邮箱" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-password">
-								密码设置：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-password" placeholder="请输入密码" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-userremark">
-								备注：
-							</label>
-							<div class="col-sm-10" >
-								<input type="text" id="form-field-userremark" placeholder="请输入备注" class="col-xs-10 col-sm-5" />
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label class="col-sm-2 control-label no-padding-right" for="form-field-status">
-								是否启用：
-							</label>
-							<div class="col-sm-10" >
-								<!--<input type="text" id="form-field-status" placeholder="请输入备注" class="col-xs-10 col-sm-5" />-->
-								<input name="switch-field-1"  id="form-field-status" class="ace ace-switch ace-switch-4" type="checkbox" checked="checked"/>
-								<span class="lbl"></span>
-							</div>
-
-							<!--<label>是否启用：-->
-								<!--<input name="switch-field-1" class="ace ace-switch ace-switch-4" type="checkbox" />-->
-								<!--<span class="lbl"></span>-->
-							<!--</label>-->
-						</div>
-
-
-
-						<!--<div class="form-group">-->
-							<!--<label class="col-sm-2 control-label no-padding-right" for="form-field-select-userDept2">-->
-								<!--对接人员：-->
-							<!--</label>-->
-							<!--<div class="col-sm-10">-->
-								<!--<select class="chosen-select  " id="form-field-select-userDept2" data-placeholder="Choose a State...">-->
-									<!--&lt;!&ndash;<option value="">请选择</option>&ndash;&gt;-->
-								<!--</select>-->
-							<!--</div>-->
-						<!--</div>-->
-
-
-					</form>
-
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-sm btn-default"  key="modalSureClose"
-							data-dismiss="modal">
-						取消
-					</button>
-					<button id="modalSureSubmit_user" type="button" class="btn btn-sm btn-primary"
-							onclick="modalSubmit_user()" data-optype="">
-						确定
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 </div><!-- /.main-container -->
 
@@ -361,6 +134,7 @@
 <script th:src="@{/assets/js/bootstrap.min.js}"></script>
 
 <script th:src="@{/assets/js/chosen.jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.gritter.min.js}"></script>
 
 <!-- page specific plugin scripts -->
 <script th:src="@{/assets/js/jquery.dataTables.min.js}"></script>
@@ -386,368 +160,83 @@
     /*<![CDATA[*/
     var pagekey = [[${pagekey}]] ;
 
-    var deptList; // 存储树形部门列表
-    var deptMap = {}; // 存储map格式的部门信息
-    var userMap = {}; // 存储map格式的用户信息
-	var optionHtml = "" ;
-	var table  ;
-	var initialDeptId = 1 ;
 
     jQuery(function($){
-
         //激活菜单栏
 		acvtiveMenu(pagekey) ;
-        loadDeptTree();
 
-        table = $('#dynamic-table').DataTable({
-            "lengthChange": false,
-            "ordering": false,
-            "searching": false,
-            "deferRender": true,
-            "oLanguage": {
-                "sLengthMenu": "每页显示 _MENU_ 条记录",
-                "sZeroRecords": "抱歉， 没有找到",
-                "sInfoEmpty": "没有数据",
-                "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
-                "oPaginate": {
-                    "sFirst": "首页",
-                    "sPrevious": "前一页",
-                    "sNext": "后一页",
-                    "sLast": "尾页"
-                },
-                "sZeroRecords": "没有检索到数据",
-            },
-            "sAjaxSource": "/sys/user/depyuser_page.json?deptId="+initialDeptId,
-            "columns": [
-				{data:"username" },
-				{data:"deptId" },
-				{data:"telephone"  , 'className':'hidden-480'},
-				{data:"mail" },
-				{data:"status" , 'className':'hidden-480' },
-				{data:"id"},
-			],
-            "columnDefs": [ {
-                "targets": 5,
-                "data": 'id',
-                "render": function ( data, type, full, meta ) {
-                    return "<td>" +
-                        "<div class='hidden-sm hidden-xs action-buttons center'>" +
-                        "<a class='green' href='javascript:void(0);' onclick='editUser("+data+")'><i class='ace-icon fa fa-pencil bigger-130'></i></a>"+
-                        // "<a class='red' href='javascript:void(0);' onclick='"+data+"'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>"+
-                        "</div>" +
-                        "</td>" ;
-                }
-            } ,{
-                "targets": 4,
-                "data": 'status',
-                "render": function ( data, type, full, meta ) {
-                    var status = "启用";
-                    if("1" != data){
-                        status="禁用";
-					}
-                    return "<td>" +status+"</td>" ;
-                }
-			},{
-                "targets": 1,
-                "data": 'deptId',
-                "render": function ( data, type, full, meta ) {
-                    // console.log("full",full);
-                   var dept = deptMap[data] ;
-                    userMap[full.id] = full ;
-                    return "<td>" +dept.name+"</td>" ;
-                }
-			}]
+
+        $('#id-input-file-3').ace_file_input({
+            style: 'well',
+            btn_choose: '点击这里进行文件的选择或者修改！',
+            btn_change: null,
+            no_icon: 'ace-icon fa fa-cloud-upload',
+            droppable: true,
+            thumbnail: 'small'//large | fit
+            //,icon_remove:null//set null, to hide remove/reset button
+            /**,before_change:function(files, dropped) {
+						//Check an example below
+						//or examples/file-upload.html
+						return true;
+					}*/
+            /**,before_remove : function() {
+						return true;
+					}*/
+            ,
+            preview_error : function(filename, error_code) {
+                //name of the file that failed
+                //error_code values
+                //1 = 'FILE_LOAD_FAILED',
+                //2 = 'IMAGE_LOAD_FAILED',
+                //3 = 'THUMBNAIL_FAILED'
+                //alert(error_code);
+            }
+
+        }).on('change', function(){
+            //console.log($(this).data('ace_input_files'));
+            //console.log($(this).data('ace_input_method'));
         });
     });
 
+    function fileUploadPost() {
 
-    function addNewUser() {
-        restModalUser();
-        $("#operatModal_user").modal('show');
-    }
+        console.log("开始上传文件....");
+        var form = new FormData(document.getElementById("fileForm"));
+        // $.ajax({
+        //     url:"${pageContext.request.contextPath}/public/testupload",
+        //     type:"post",
+        //     data:form,
+        //     processData:false,
+        //     contentType:false,
+        //     success:function(data){
+        //         window.clearInterval(timer);
+        //         console.log("over..");
+        //     },
+        //     error:function(e){
+        //         alert("错误！！");
+        //         window.clearInterval(timer);
+        //     }
+        // });
 
-    function editUser(userId) {
-        CopyUserAttrs(userId) ;
-        $("#operatModal_user").modal('show');
-
-    }
-
-    function addNewDept(){
-	    console.log('addNew....');
-        restModalDept();
-	    $("#operatModal").modal('show');
-	}
-
-	function editDept(id){
-        console.log("editDept : id="+id);
-        CopyDeptAttrs(id) ;
-        $("#operatModal").modal('show');
-    }
-
-    function delDept(id) {
-        console.log("delDept : id="+id);
-        $("#deptId").attr("data-optype",'delete') ;
-        $("#deptId").val(id);
-        if(confirm("确定删除,删除后不能恢复！！")){
-            modalSubmit();
-		}
-
-    }
-
-    function modalSubmit() {
-		var dept = getDeptParam();
-        var optype = $("#deptId").attr("data-optype") ;
-        // console.log("dept::" , JSON.stringify(dept));
         $.ajax({
-            url: "/sys/dept/"+optype+".json",
-			type:"POST",
-			data:JSON.stringify(dept) ,
-            contentType: "application/json; charset=utf-8",
-            success : function (result) {
-                // console.log(result);
-                if(result.code == '0'){
-                   location.reload();
-
-                }else {
-                    alert(result.msg);
-                }
-            }
-        })
-    }
-
-    function modalSubmit_user() {
-        var user = getUserParam();
-        var optype = $("#sysUserId").attr("data-optype") ;
-        var deptId = $("#sysUserId").attr("data-deptid") ;
-        $.ajax({
-            url: "/sys/user/"+optype+".json",
-            type:"POST",
-            data:JSON.stringify(user) ,
-            contentType: "application/json; charset=utf-8",
-            success : function (result) {
-                if(result.code == '0'){
-                    // location.reload();
-                    table.ajax.url( "/sys/user/depyuser_page.json?deptId="+deptId ).load();
-                    $("#operatModal_user").modal('hide');
-                }else {
-                    alert(result.msg);
-                }
-            }
-        })
-
-    }
-
-    //加载部门树结构json
-    function loadDeptTree(){
-        $.ajax({
-            url: "/sys/dept/tree.json",
-            success : function (result) {
-
-                if(result.code == '0'){
-                    deptList = result.data;
-                    // console.log( deptList) ;
-                    var preHtml = "<li class='dd-item' ><div class='dd-handle'><i class='h4'>部门列表</i>" +
-                        "<div class='pull-right action-buttons'> " +
-                        "<a class='green' href='javascript:void(0);' onclick='addNewDept()'>" +
-                        "<i class='ace-icon glyphicon glyphicon-plus bigger-130'></i></a></div></li>" ;
-                    var htmlStr =  recursiveRenderDept(deptList);
-                    htmlStr = preHtml + htmlStr ;
-
-                    $("#nestable").html(htmlStr);
-
-
-                    $("#form-field-select-parent").html("<option value='0'>请选择</option>"+optionHtml) ;
-                    $("#form-field-select-userDept").html("<option value='0'>请选择</option>"+optionHtml) ;
-                    // $("#form-field-select-userDept2").html("<option value='0'>请选择</option>"+optionHtml) ;
-
-                }else {
-                    alert(result.msg);
-                }
-            },
-            complete:function () {
-                $('.dd').nestable() ;
-                initChosen();
-                initNestable();
-            }
-        })
-
-    }
-    
-    function initNestable() {
-        $("#sysUserId").attr("data-deptid",initialDeptId) ;
-        $("#nestable").find("div[class='dd-handle']").each(function (i,div) {
-            	if(i == 1 ){
-            	    $(this).addClass("btn-yellow no-hover");
+            url: "/upload.json",
+            type: 'POST',
+            data: form,
+            processData:false,
+            contentType:false,
+            success: function (result) {
+                console.log("result..",typeof result);
+                if(typeof result == 'string'){
+                    showMessage("上传转换文件成功", "操作成功", false);
+				}else{
+                    showMessage("上传转换文件成功", result.msg, false);
 				}
-        })
-    }
 
-    // 递归渲染部门树
-    function recursiveRenderDept(deptList) {
-        var htmlStr = "" ;
-        if(deptList && deptList.length > 0) {
-            htmlStr=htmlStr+"<ol class='dd-list'>";
-            $(deptList).each(function (i, dept) {
-                // <ol class='dd-list'><li class='dd-item' data-id='1'><div class='dd-handle'  >item0</div></li></ol>
-                htmlStr=htmlStr+"<li class='dd-item' data-id='"+dept.id+"'>" +
-                    "<div class='dd-handle'   onclick='loadUserList("+dept.id+",this)'>"+dept.name
-                    +"<div class='pull-right action-buttons' >" +
-                    "<a class='blue' href='javascript:void(0)' onclick='editDept("+dept.id+")'><i class='ace-icon fa fa-pencil bigger-130'></i> </a>"+
-                    "<a class='red' href='javascript:void(0)' onclick='delDept("+dept.id+")'><i class='ace-icon fa fa-trash-o bigger-130'></i></a>"
-                    +"</div></div>"
-                deptMap[dept.id] = dept;
-                // deptListOptions.push(dept);
-                optionHtml=optionHtml+"<option value='"+dept.id+"'>"+dept.name+"</option>"
-                if (dept.deptList.length > 0) {
-                    htmlStr=htmlStr+recursiveRenderDept(dept.deptList);
-                }
-                htmlStr=htmlStr+"</li>" ;
-            })
-            htmlStr=htmlStr+"</ol>";
-        }
-        return htmlStr ;
-    }
-
-    function loadUserList(deptId,obj) {
-        console.log("deptId=="+deptId);
-        $("#sysUserId").attr("data-deptid",deptId) ;
-        table.ajax.url( "/sys/user/depyuser_page.json?deptId="+deptId ).load();
-        setNestableClass(obj);
-    }
-
-    function setNestableClass(obj) {
-        $("#nestable").find("div[class='dd-handle btn-yellow no-hover']").each(function (i,div) {
-            $(this).removeClass("btn-yellow no-hover");
+            }
         });
-        $(obj).addClass("btn-yellow no-hover");
-    }
-
-
-
-
-    //获取modal 参数对象
-    function getDeptParam() {
-        var dept = new Object() ;
-        dept.id = $("#deptId").val();
-        if(  'delete'==  $("#deptId").attr("data-optype")  ){
-		}else {
-
-            dept.name =  $("#form-field-name").val() ;
-            dept.seq =   $("#form-field-seq").val() ;
-            dept.remark =  $("#form-field-remark").val() ;
-            dept.parentId = $("#form-field-select-parent").val()  ;
-		}
-        return dept ;
-    }
-
-
-    //重置 部门 modal
-    function restModalDept() {
-        $("#deptId").val(0) ;
-        $("#deptId").attr("data-optype",'save') ;
-
-        $("#form-field-name").val("") ;
-        $("#form-field-seq").val("") ;
-        $("#form-field-remark").val("") ;
-        $("#form-field-select-parent").val(0) ;
-        $("#form-field-select-parent").trigger("chosen:updated");
-    }
-
-    //拷贝部门属性到modal
-    function CopyDeptAttrs(id) {
-        var dept = deptMap[id] ;
-        // console.log("dept::" , dept.parentId);
-        $("#deptId").val(dept.id) ;
-        $("#deptId").attr("data-optype",'update') ;
-        $("#form-field-name").val(dept.name) ;
-        $("#form-field-seq").val(dept.seq) ;
-        $("#form-field-remark").val(dept.remark) ;
-        $("#form-field-select-parent").val(dept.parentId) ;
-        $("#form-field-select-parent").trigger("chosen:updated");
-    }
-
-    //获取modal 用户参数对象
-    function getUserParam() {
-        var user = new Object() ;
-        user.id = $("#sysUserId").val();
-        user.username =  $("#form-field-userName").val() ;
-        user.telephone =   $("#form-field-telnum").val() ;
-        user.mail =  $("#form-field-mail").val() ;
-        user.password = $("#form-field-password").val()  ;
-        user.deptId = $("#form-field-select-userDept").val()  ;
-        user.remark = $("#form-field-userremark").val()  ;
-        if($("#form-field-status").prop("checked")){
-            user.status = 1 ;
-        }else {
-            user.status = 0 ;
-        }
-        return user ;
-    }
-
-    //重置 用户 modal
-    function restModalUser() {
-        $("#sysUserId").val(0) ;
-        $("#sysUserId").attr("data-optype",'save') ;
-
-        $("#form-field-userName").val("") ;
-        $("#form-field-telnum").val("") ;
-        $("#form-field-mail").val("") ;
-        $("#form-field-password").val("") ;
-        $("#form-field-userremark").val("") ;
-        $("#form-field-status").prop("checked","checked");
-        $("#form-field-select-userDept").val(0) ;
-        $("#form-field-select-userDept").trigger("chosen:updated");
 
     }
 
-    //拷贝部门属性到modal
-    function CopyUserAttrs(id) {
-        var user = userMap[id];
-        $("#sysUserId").val(id) ;
-        $("#sysUserId").attr("data-optype",'update') ;
-
-
-
-        $("#form-field-userName").val(user.username) ;
-        $("#form-field-telnum").val(user.telephone) ;
-        $("#form-field-mail").val(user.mail) ;
-        $("#form-field-password").val(user.password) ;
-        $("#form-field-userremark").val(user.remark) ;
-		if(user.status == 1 ){
-            $("#form-field-status").prop("checked","checked");
-		}else {
-            $("#form-field-status").prop("checked",false);
-		}
-        $("#form-field-select-userDept").val(user.deptId ) ;
-        $("#form-field-select-userDept").trigger("chosen:updated");
-    }
-
-
-
-	//初始化chosen 插件
-    function initChosen() {
-        $('.chosen-select').chosen({allow_single_deselect:true});
-
-
-        // console.log($("#input_1").css("width"));
-        $(window)
-            .off('resize.chosen')
-            .on('resize.chosen', function() {
-                $('.chosen-select').each(function() {
-                    var $this = $(this);
-                    // $this.next().css({'width': $this.parent().width()});
-                    $this.next().css({'width': '200px'});
-                })
-            }).trigger('resize.chosen');
-
-        $(document).on('settings.ace.chosen', function(e, event_name, event_val) {
-            if(event_name != 'sidebar_collapsed') return;
-            $('.chosen-select').each(function() {
-                var $this = $(this);
-                $this.next().css({'width': $this.parent().width()});
-            })
-        });
-    }
 
     /*]]>*/
 </script>

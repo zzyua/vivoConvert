@@ -1,10 +1,16 @@
 package com.boot.controller;
 
 import com.boot.entity.Common;
+import com.boot.exception.RestDymaicException;
+import com.boot.exception.Result;
+import com.boot.exception.ResultEnum;
+import com.boot.exception.ResultUtil;
 import com.boot.util.DeleteDir;
 import com.boot.util.PoiUtil;
 import com.boot.util.RandUtil;
 import com.boot.util.ZipUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,11 +46,13 @@ public class FileConvertController {
 
 
 
-    @PostMapping("/upload")
+    @PostMapping("/upload.json")
     @ResponseBody
-    public String upload(MultipartHttpServletRequest request , HttpServletResponse response) {
+    public Result upload(MultipartHttpServletRequest request , HttpServletResponse response) throws  Exception{
 
         Iterator<String> fileNames =  request.getFileNames();
+
+
 
         String folderName = RandUtil.getFilePath();
         //上传文件夹的路径  uploadFilePath + 时间戳
@@ -66,13 +74,16 @@ public class FileConvertController {
             response.setHeader("Content-Disposition",
                     "attachment; filename=" + folderName+".zip");
             ZipUtils.toZip(path , response.getOutputStream(),false);
-        } catch (Exception e) {
+        }catch (RestDymaicException e){
+           throw  e ;
+        }catch (Exception e) {
             e.printStackTrace();
+            throw new RestDymaicException(ResultEnum.CONVERTFILE_ERROR);
         }finally {
             //4、 删除服务器中的文件
 //            DeleteDir.deleteDirectory(path);
         }
-        return "jello";
+        return ResultUtil.success();
     }
 
 
@@ -95,6 +106,9 @@ public class FileConvertController {
 
             fileList.forEach(multipartFie -> {
                 String fileName = multipartFie.getOriginalFilename();
+                if(StringUtils.isEmpty(fileName)){
+                    throw  new RestDymaicException(ResultEnum.CONVERTFILESISEMPTY);
+                }
 
                 System.out.println("fileName: "+fileName);
                 Map<String,String > map = new HashMap<>();

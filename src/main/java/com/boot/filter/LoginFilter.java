@@ -27,6 +27,7 @@ public class LoginFilter implements Filter {
             resp.sendRedirect(path);
             return;
         }
+//        ((HttpServletRequest) request).getSession().setAttribute("user",user);
         RequestHolder.add(user);
         RequestHolder.add(req);
         chain.doFilter(request,response);

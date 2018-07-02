@@ -1,18 +1,225 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <title>选择转换</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" />
+    <title>首页</title>
+
+    <meta name="description" content="overview &amp; stats" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <!-- bootstrap & fontawesome -->
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/font-awesome/4.5.0/css/font-awesome.min.css}" />
+
+    <!-- page specific plugin styles -->
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.custom.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/chosen.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/jquery.gritter.min.css}" />
+
+    <!-- text fonts -->
+    <link rel="stylesheet" th:href="@{/assets/css/fonts.googleapis.com.css}" />
+
+    <!-- ace styles -->
+    <link rel="stylesheet" th:href="@{/assets/css/ace.min.css}" th:class="ace-main-stylesheet" th:id="main-ace-style" />
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" th:href="@{/assets/css/ace-part2.min.css}" th:class="ace-main-stylesheet" />
+    <![endif]-->
+    <link rel="stylesheet" th:href="@{/assets/css/ace-skins.min.css}" />
+    <link rel="stylesheet" th:href="@{/assets/css/ace-rtl.min.css}" />
+
+    <!--[if lte IE 9]>
+    <link rel="stylesheet" th:href="assets/css/ace-ie.min.css" />
+    <![endif]-->
+
+    <!-- inline styles related to this page -->
+
+    <!-- ace settings handler -->
+    <script th:src="@{/assets/js/ace-extra.min.js}"></script>
+
+    <!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+
+    <!--[if lte IE 8]>
+    <script th:src="@{/assets/js/html5shiv.min.js}"></script>
+    <script th:src="@{/assets/js/respond.min.js}"></script>
+    <![endif]-->
 </head>
-<body>
-<h2>文件转换：选择文件，点击【转换】按钮后，会自动下载转换好的文件</h2>
-<hr/>
-<form method="POST" enctype="multipart/form-data" action="upload">
-    <p>
-        文件：<input type="file" name="file" multiple="multiple"/>
-    </p>
-    <p>
-        <input type="submit" value="转换"/>
-    </p>
-</form>
+
+<body class="no-skin">
+
+<div class="main-container ace-save-state" id="main-container">
+    <script type="text/javascript">
+        try{ace.settings.loadState('main-container')}catch(e){}
+    </script>
+
+
+    <div class="main-content">
+        <div class="main-content-inner">
+            <div class="breadcrumbs ace-save-state" id="breadcrumbs">
+                <ul class="breadcrumb">
+                    <li>
+                        <i class="ace-icon fa fa-home home-icon"></i>
+                        <!-- <a href="#">Home</a> -->
+                        文件转换
+                    </li>
+
+                </ul><!-- /.breadcrumb -->
+
+            </div>
+
+            <div class="page-content">
+                <!--<div class="page-header">-->
+
+                <!--</div>-->
+
+                <div class="widget-box" style="height: 500px">
+                    <div class="widget-header">
+                        <h4 class="widget-title">文件转换：点击【GO】按钮后，会自动下载转换好的文件</h4>
+                    </div>
+
+                    <div class="widget-body">
+                        <div class="widget-main">
+                            <!--<form method="POST" enctype="multipart/form-data" action="upload">-->
+                            <form   enctype="multipart/form-data"  id="fileForm">
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <input multiple="multiple" type="file"   name="file"  id="id-input-file-3" />
+                                    </div>
+                                    <!--<p>-->
+                                    <!--&lt;!&ndash;<input class="btn btn-success btn-block " type="submit" value="GO"/>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<input class="btn btn-success btn-block " type="submit" value="GO"/>&ndash;&gt;-->
+                                    <!--<button class="btn btn-success btn-block " onclick="fileUploadPost">GO</button>-->
+                                    <!--</p>-->
+
+                                </div>
+                            </form>
+                            <hr/>
+                            <p>
+                                <button class="btn btn-success btn-block " onclick="fileUploadPost()">GO</button>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.page-content -->
+        </div>
+    </div><!-- /.main-content -->
+
+    <div class="footer" th:include="footer :: copyright" ></div>
+
+
+</div><!-- /.main-container -->
+
+
+
+
+<!-- basic scripts -->
+
+<!--[if !IE]> -->
+<script th:src="@{/assets/js/jquery-2.1.4.min.js}"></script>
+
+<!-- <![endif]-->
+
+<!--[if IE]>
+<script th:src="@{/assets/js/jquery-1.11.3.min.js}"></script>
+<![endif]-->
+
+
+<script th:src="@{/assets/js/bootstrap.min.js}"></script>
+
+<script th:src="@{/assets/js/chosen.jquery.min.js}"></script>
+<script th:src="@{/assets/js/jquery.gritter.min.js}"></script>
+
+<!-- page specific plugin scripts -->
+<script th:src="@{/assets/js/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/js/jquery.dataTables.bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/dataTables.buttons.min.js}"></script>
+
+<!--[if lte IE 8]>
+<script th:src="@{/assets/js/excanvas.min.js}"></script>
+<![endif]-->
+
+<script th:src="@{/assets/js/jquery.nestable.min.js}"></script>
+<!-- ace scripts -->
+<script th:src="@{/assets/js/ace-elements.min.js}"></script>
+<script th:src="@{/assets/js/ace.min.js}"></script>
+<script th:src="@{/vivo/common.js}"></script>
+
+
+
+
+
+<script th:inline="javascript">
+
+    /*<![CDATA[*/
+    var pagekey = [[${pagekey}]] ;
+
+
+    jQuery(function($){
+        //激活菜单栏
+        acvtiveMenu(pagekey) ;
+
+
+        $('#id-input-file-3').ace_file_input({
+            style: 'well',
+            btn_choose: '点击这里进行文件的选择或者修改！',
+            btn_change: null,
+            no_icon: 'ace-icon fa fa-cloud-upload',
+            droppable: true,
+            thumbnail: 'small'//large | fit
+            //,icon_remove:null//set null, to hide remove/reset button
+            /**,before_change:function(files, dropped) {
+						//Check an example below
+						//or examples/file-upload.html
+						return true;
+					}*/
+            /**,before_remove : function() {
+						return true;
+					}*/
+            ,
+            preview_error : function(filename, error_code) {
+                //name of the file that failed
+                //error_code values
+                //1 = 'FILE_LOAD_FAILED',
+                //2 = 'IMAGE_LOAD_FAILED',
+                //3 = 'THUMBNAIL_FAILED'
+                //alert(error_code);
+            }
+
+        }).on('change', function(){
+            //console.log($(this).data('ace_input_files'));
+            //console.log($(this).data('ace_input_method'));
+        });
+    });
+
+    function fileUploadPost() {
+
+        console.log("开始上传文件....");
+        var form = new FormData(document.getElementById("fileForm"));
+
+        $.ajax({
+            url: "/upload.json",
+            type: 'POST',
+            data: form,
+            processData:false,
+            contentType:false,
+            success: function (result) {
+                console.log("result..",typeof result);
+                if(typeof result == 'string'){
+                    showMessage("上传转换文件成功", "操作成功", false);
+                }else{
+                    showMessage("上传转换文件成功", result.msg, false);
+                }
+
+            }
+        });
+
+    }
+
+
+    /*]]>*/
+</script>
 </body>
 </html>

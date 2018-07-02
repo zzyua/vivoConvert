@@ -92,10 +92,8 @@ public class SysUserService {
 //        }
 //        return PageResult.<SysUser>builder().build();
 //    }
-//
-//    public List<SysUser> getAll() {
-//        return sysUserMapper.getAll();
-//    }
+
+
 
     public List<SysUser> getAllByDeptId(int deptId) throws Exception{
         List<SysUser> list = sysUserMapper.getAllByDeptId(deptId);
